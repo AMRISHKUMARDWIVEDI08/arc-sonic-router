@@ -3,105 +3,117 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SonicFlow Pro V1</title>
+    <title>SonicFlow Pro - Amrish</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/5.7.2/ethers.umd.min.js"></script>
     <style>
-        body { background: radial-gradient(circle at top, #1e293b, #000); color: white; font-family: 'Inter', sans-serif; }
-        .glass { background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(15px); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 24px; }
-        .neon-text { text-shadow: 0 0 10px rgba(74, 222, 128, 0.5); }
-        .status-dot { width: 8px; height: 8px; border-radius: 50%; background: #4ade80; box-shadow: 0 0 10px #4ade80; }
+        body { background: radial-gradient(circle at top, #0f172a, #000); color: white; font-family: sans-serif; min-height: 100vh; }
+        .glass { background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 28px; }
+        .status-active { background: #4ade80; box-shadow: 0 0 12px #4ade80; }
+        .btn-gradient { background: linear-gradient(90deg, #3b82f6, #2563eb); transition: all 0.3s; }
+        .btn-gradient:hover { box-shadow: 0 0 20px rgba(37, 99, 235, 0.6); }
     </style>
 </head>
-<body class="p-4 min-h-screen">
+<body class="p-4" onclick="initAudio()">
 
-    <div class="flex justify-between items-center mb-8 px-2">
+    <div class="flex justify-between items-center mb-10 mt-2 px-2">
         <div>
-            <h1 class="text-xl font-black tracking-tighter text-green-400 italic">SONIC<span class="text-white">FLOW PRO</span></h1>
-            <p class="text-[8px] text-slate-500 uppercase font-bold tracking-[0.2em]">Universal Multi-Asset Router</p>
-        </div>
-        <button id="connectBtn" onclick="connectWallet()" class="glass px-4 py-2 text-[10px] font-bold border-green-500/30 text-green-400">CONNECT</button>
-    </div>
-
-    <div class="glass p-6 mb-6 shadow-2xl">
-        <div class="flex justify-between items-center mb-6">
+            <h1 class="text-2xl font-black italic text-green-400 tracking-tighter">SONIC<span class="text-white">FLOW</span></h1>
             <div class="flex items-center gap-2">
-                <div class="status-dot animate-pulse"></div>
-                <span class="text-[10px] font-bold text-slate-400 uppercase">System Active</span>
-            </div>
-            <div class="text-right text-[10px]">
-                <p class="text-slate-500 font-bold uppercase">Arc Testnet</p>
-                <p id="balanceDisplay" class="text-green-400 font-mono">0.00 USDC</p>
+                <div class="w-2 h-2 rounded-full status-active animate-pulse"></div>
+                <span class="text-[8px] font-bold text-slate-500 uppercase tracking-widest">Network Secure</span>
             </div>
         </div>
-
-        <div class="flex gap-4 mb-8 overflow-x-auto no-scrollbar">
-            <button class="bg-blue-600 px-4 py-2 rounded-xl text-[10px] font-bold">Transfer</button>
-            <button class="glass px-4 py-2 rounded-xl text-[10px] font-bold text-slate-400">Swap</button>
-            <button class="glass px-4 py-2 rounded-xl text-[10px] font-bold text-slate-400">Bridge</button>
-        </div>
-
-        <div class="bg-black/40 border border-white/5 rounded-2xl p-4 mb-6">
-            <label class="text-[9px] font-bold text-slate-500 uppercase block mb-3">Send Asset</label>
-            <select class="bg-transparent text-sm font-bold w-full outline-none border-b border-white/10 pb-2 mb-4">
-                <option class="bg-black text-white">USDC (Stablecoin)</option>
-            </select>
-            <input type="text" placeholder="Recipient address (0x...)" class="bg-transparent text-xs w-full outline-none border-b border-white/10 pb-2 mb-4">
-            <input type="number" placeholder="0.00" class="bg-transparent text-2xl font-black w-full outline-none text-center">
-        </div>
-
-        <button onclick="executeAction()" class="w-full bg-blue-600 hover:bg-blue-500 text-white py-4 rounded-2xl font-black text-sm shadow-xl transition-all active:scale-95 uppercase tracking-widest">
-            Confirm Send
+        <button id="walletBtn" onclick="toggleWallet()" class="glass px-4 py-2 text-[10px] font-black border-white/20 text-blue-400 uppercase tracking-widest">
+            Connect Wallet
         </button>
     </div>
 
-    <div class="glass p-5 mb-10">
-        <h3 class="text-[9px] font-black text-slate-500 uppercase tracking-widest mb-4">Ecosystem & Socials</h3>
-        <div class="grid grid-cols-2 gap-3">
-            <a href="#" class="bg-white/5 p-3 rounded-xl border border-white/5 text-center">
-                <p class="text-[8px] font-bold text-slate-400">WEBSITE</p>
-            </a>
-            <a href="#" class="bg-white/5 p-3 rounded-xl border border-white/5 text-center">
-                <p class="text-[8px] font-bold text-slate-400">DOCS</p>
-            </a>
+    <div class="glass p-6 mb-8 shadow-2xl border-white/5">
+        <div class="flex justify-between text-[10px] font-black text-slate-500 uppercase mb-8 border-b border-white/5 pb-2">
+            <span class="text-green-400 border-b-2 border-green-400">Transfer</span>
+            <span>Bridge</span>
+            <span>Swap</span>
         </div>
+
+        <div class="bg-black/40 rounded-3xl p-5 mb-6 border border-white/5">
+            <div class="flex justify-between items-center mb-6">
+                <span class="text-[9px] font-bold text-slate-500 uppercase">Amount to Send</span>
+                <span id="balLabel" class="text-[9px] font-mono text-green-500">Balance: 0.00</span>
+            </div>
+            <div class="flex justify-between items-center">
+                <input type="number" id="amt" placeholder="0.00" class="bg-transparent text-4xl font-black outline-none w-2/3">
+                <div class="bg-white/5 px-4 py-2 rounded-2xl border border-white/10 text-xs font-bold">USDC</div>
+            </div>
+        </div>
+
+        <button onclick="processRoute()" class="w-full btn-gradient py-5 rounded-2xl font-black text-xs uppercase tracking-[0.2em] shadow-lg active:scale-95">
+            Execute Sonic Route
+        </button>
+    </div>
+
+    <div class="grid grid-cols-2 gap-4 text-center opacity-60">
+        <div class="glass p-4 border-white/5"><p class="text-[8px] font-bold uppercase tracking-widest text-slate-400">Ecosystem</p></div>
+        <div class="glass p-4 border-white/5"><p class="text-[8px] font-bold uppercase tracking-widest text-slate-400">Support</p></div>
     </div>
 
     <script>
-        // Audio Machine
-        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-        function playSound(freq) {
-            const osc = audioCtx.createOscillator();
-            const gain = audioCtx.createGain();
-            osc.connect(gain); gain.connect(audioCtx.destination);
-            osc.type = 'sine'; osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
-            gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
-            gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.5);
-            osc.start(); osc.stop(audioCtx.currentTime + 0.5);
-        }
+        let provider, signer, address = null;
+        let audioInited = false;
 
-        async function connectWallet() {
-            if (window.ethereum) {
-                const provider = new ethers.providers.Web3Provider(window.ethereum);
-                await provider.send("eth_requestAccounts", []);
-                const signer = provider.getSigner();
-                const address = await signer.getAddress();
-                document.getElementById('connectBtn').innerText = address.substring(0,6)+"..."+address.substring(38);
-                playSound(880); // Success Sound
+        // Voice Function
+        function speak(text) {
+            if (window.speechSynthesis) {
+                const msg = new SpeechSynthesisUtterance(text);
+                msg.rate = 1;
+                msg.pitch = 1.2;
+                window.speechSynthesis.speak(msg);
             }
         }
 
-        function executeAction() {
-            playSound(440); // Click Sound
-            alert("Action Processed, Amrish!");
+        function initAudio() { audioInited = true; }
+
+        async function toggleWallet() {
+            // Agar pehle se connected hai toh Disconnect karein
+            if (address) {
+                address = null;
+                document.getElementById('walletBtn').innerText = "Connect Wallet";
+                document.getElementById('balLabel').innerText = "Balance: 0.00";
+                speak("Wallet Disconnected");
+                return;
+            }
+
+            // Connect Logic
+            if (window.ethereum) {
+                try {
+                    provider = new ethers.providers.Web3Provider(window.ethereum);
+                    await provider.send("eth_requestAccounts", []);
+                    signer = provider.getSigner();
+                    address = await signer.getAddress();
+                    
+                    document.getElementById('walletBtn').innerText = address.substring(0,6) + "..." + address.substring(38);
+                    
+                    // Voice Alert
+                    speak("Wallet Connected");
+                    
+                    // Balance Simulation
+                    document.getElementById('balLabel').innerText = "Balance: 1,250.40";
+                } catch (err) {
+                    console.log("User Cancelled");
+                }
+            } else {
+                alert("Please open in Mises Browser");
+            }
         }
 
-        // Startup Sound
-        window.onclick = () => { if (audioCtx.state === 'suspended') audioCtx.resume(); };
+        function processRoute() {
+            const amount = document.getElementById('amt').value;
+            if (!address) return speak("Please connect wallet first");
+            if (!amount) return speak("Enter amount");
+            speak("Processing transaction");
+            alert("Transaction Submitted on Arc Network!");
+        }
     </script>
 </body>
-        </html>
-                
-
-
-    
+                </html>
+            
