@@ -136,49 +136,64 @@
 
         // Screen par kahin bhi click karne se music activate hoga
         document.getElementById('mainBody').addEventListener('click', startExperience, {once: true});
-    </script>
-    <script>
-    // 1. Ruhani Music & Beep Setup
-    const bgMusic = new Audio('https://www.soundhelix.com/examples/mp3/SoundHelix-Song-15.mp3');
-    const beep = new Audio('https://assets.mixkit.co/active_storage/sfx/2571/2571-preview.mp3');
-    bgMusic.loop = true;
-    bgMusic.volume = 0.15; // Soft volume
+    </script>// 1. Ruhani Music Setup
+const music = new Audio('https://www.soundhelix.com/examples/mp3/SoundHelix-Song-15.mp3');
+music.loop = true;
+music.volume = 0.15;
 
-    // 2. Interaction Logic (Music & Beeps start on first click)
-    document.addEventListener('click', (e) => {
-        // Music start logic
-        if (bgMusic.paused) {
-            bgMusic.play().catch(() => console.log("User interaction required"));
-            const talk = new SpeechSynthesisUtterance("ArcFlow System Online");
-            window.speechSynthesis.speak(talk);
-        }
+// 2. Beep Sound Setup
+const beep = new Audio('https://assets.mixkit.co/active_storage/sfx/2571/2571-preview.mp3');
+beep.volume = 0.2;
 
-        // 3. Har option par Beep sound
-        // Agar click kisi button ya tab par hua hai to beep bajega
-        if (e.target.tagName === 'BUTTON' || e.target.closest('.tab-item') || e.target.closest('.grid-card')) {
-            beep.currentTime = 0;
-            beep.play();
-        }
-    });
-
-    // 4. Transaction Logic (Music control)
-    // Jab "Confirm Send" ya "Execute" dabayein, is function ko call karein
-    function startTransaction() {
-        bgMusic.pause(); // Transaction ke samaye music BAND
-        const msg = new SpeechSynthesisUtterance("Processing transaction. Please wait.");
+// Har click par Beep aur Music start logic
+document.addEventListener('click', () => {
+    if (music.paused) {
+        music.play();
+        const msg = new SpeechSynthesisUtterance("ArcFlow System Online");
         window.speechSynthesis.speak(msg);
-
-        // Maan lo transaction 5 second mein puri hui
-        setTimeout(() => {
-            bgMusic.play(); // Transaction puri hone par music CHALNE LAGA
-            const success = new SpeechSynthesisUtterance("Transaction successful.");
-            window.speechSynthesis.speak(success);
-        }, 5000);
     }
+    // Button click par beep bajao
+    if (event.target.tagName === 'BUTTON' || event.target.closest('.tab-item')) {
+        beep.currentTime = 0;
+        beep.play();
+    }
+}, { once: false });
 
-    // Is function ko apne existing "Confirm Send" button ke onclick mein jod dein
-    // Example: <button onclick="startTransaction(); originalFunction();">Confirm Send</button>
+// 3. Transaction Logic: Music band/shuru karna
+function handleTransaction() {
+    music.pause(); // Transaction shuru hote hi music BAND
+    console.log("Transaction in progress...");
+    
+    // Simulate transaction end (Aap apne real function mein ye use karein)
+    setTimeout(() => {
+        music.play(); // Transaction puri hote hi music CHALNE LAGA
+        console.log("Transaction Complete");
+    }, 5000);
+}
+    <script>
+    const ruhaniMusic = new Audio('https://www.soundhelix.com/examples/mp3/SoundHelix-Song-15.mp3');
+    const beepSound = new Audio('https://assets.mixkit.co/active_storage/sfx/2571/2571-preview.mp3');
+    ruhaniMusic.loop = true;
+
+    document.addEventListener('click', () => {
+        // Pehle click par music shuru
+        if (ruhaniMusic.paused) { 
+            ruhaniMusic.play(); 
+            ruhaniMusic.volume = 0.2;
+        }
+        // Har button click par Beep
+        if (event.target.tagName === 'BUTTON') {
+            beepSound.currentTime = 0;
+            beepSound.play();
+        }
+    }, { once: false });
+
+    // Transaction ke waqt music control karne ke liye
+    function toggleMusic(play) {
+        play ? ruhaniMusic.play() : ruhaniMusic.pause();
+    }
     </script>
     
 </body>
-</html>
+    </html>
+    
