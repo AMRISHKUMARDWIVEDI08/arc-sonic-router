@@ -137,5 +137,48 @@
         // Screen par kahin bhi click karne se music activate hoga
         document.getElementById('mainBody').addEventListener('click', startExperience, {once: true});
     </script>
+    <script>
+    // 1. Ruhani Music & Beep Setup
+    const bgMusic = new Audio('https://www.soundhelix.com/examples/mp3/SoundHelix-Song-15.mp3');
+    const beep = new Audio('https://assets.mixkit.co/active_storage/sfx/2571/2571-preview.mp3');
+    bgMusic.loop = true;
+    bgMusic.volume = 0.15; // Soft volume
+
+    // 2. Interaction Logic (Music & Beeps start on first click)
+    document.addEventListener('click', (e) => {
+        // Music start logic
+        if (bgMusic.paused) {
+            bgMusic.play().catch(() => console.log("User interaction required"));
+            const talk = new SpeechSynthesisUtterance("ArcFlow System Online");
+            window.speechSynthesis.speak(talk);
+        }
+
+        // 3. Har option par Beep sound
+        // Agar click kisi button ya tab par hua hai to beep bajega
+        if (e.target.tagName === 'BUTTON' || e.target.closest('.tab-item') || e.target.closest('.grid-card')) {
+            beep.currentTime = 0;
+            beep.play();
+        }
+    });
+
+    // 4. Transaction Logic (Music control)
+    // Jab "Confirm Send" ya "Execute" dabayein, is function ko call karein
+    function startTransaction() {
+        bgMusic.pause(); // Transaction ke samaye music BAND
+        const msg = new SpeechSynthesisUtterance("Processing transaction. Please wait.");
+        window.speechSynthesis.speak(msg);
+
+        // Maan lo transaction 5 second mein puri hui
+        setTimeout(() => {
+            bgMusic.play(); // Transaction puri hone par music CHALNE LAGA
+            const success = new SpeechSynthesisUtterance("Transaction successful.");
+            window.speechSynthesis.speak(success);
+        }, 5000);
+    }
+
+    // Is function ko apne existing "Confirm Send" button ke onclick mein jod dein
+    // Example: <button onclick="startTransaction(); originalFunction();">Confirm Send</button>
+    </script>
+    
 </body>
 </html>
