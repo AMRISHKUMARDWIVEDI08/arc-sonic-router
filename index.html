@@ -1,10 +1,8 @@
-export const ARC_TESTNET = {
-  chainId: "0x4cef52",
-  chainName: "Arc Testnet",
-  nativeCurrency: {
-    name: "USDC",
-    symbol: "USDC",
-    decimals: 18
-  },
-  rpcUrls: ["https://rpc.arc.network"],
-};
+export async function estimateGas(provider, tx) {
+  try {
+    const gas = await provider.estimateGas(tx);
+    return gas;
+  } catch (e) {
+    return null;
+  }
+}
