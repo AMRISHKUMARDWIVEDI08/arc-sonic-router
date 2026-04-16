@@ -3,197 +3,171 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ArcFlow Pro V26 - Ruhani Edition</title>
+    <title>ArcFlow Pro V26</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        body { background: #020617; color: #f8fafc; font-family: sans-serif; overflow-x: hidden; }
-        .glass { background: rgba(15, 23, 42, 0.8); backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.05); border-radius: 24px; }
-        .tab-btn { background: #1e293b; color: #94a3b8; padding: 10px 20px; border-radius: 12px; font-size: 11px; font-weight: 800; cursor: pointer; transition: 0.3s; }
-        .tab-active { background: #3b82f6 !important; color: white !important; box-shadow: 0 0 15px rgba(59, 130, 246, 0.3); }
-        .hidden-ui { display: none; }
+        body { background-color: #050a18; color: #ffffff; font-family: 'Inter', sans-serif; }
+        .glass-panel { background: rgba(17, 24, 39, 0.8); border: 1px solid rgba(255, 255, 255, 0.05); border-radius: 1.5rem; }
+        .tab-item { cursor: pointer; padding: 0.5rem 1rem; font-weight: 700; font-size: 0.75rem; color: #64748b; border-bottom: 2px solid transparent; transition: 0.3s; }
+        .tab-active { color: #3b82f6; border-bottom: 2px solid #3b82f6; }
+        .hidden-section { display: none; }
+        .action-btn { background: #2563eb; color: white; border-radius: 0.75rem; font-weight: 800; transition: 0.3s; }
+        .action-btn:active { transform: scale(0.98); }
+        .grid-card { background: #111827; border: 1px solid #1f2937; border-radius: 0.75rem; padding: 1rem; text-align: center; cursor: pointer; }
     </style>
 </head>
-<body class="p-4 pb-24" id="mainBody">
+<body class="p-4 pb-20">
 
     <div class="flex justify-between items-center mb-6">
-        <h1 class="text-xl font-black italic tracking-tighter">ArcFlow <span class="text-blue-500 font-bold text-[10px] not-italic uppercase">Pro V26</span></h1>
-        <div class="text-blue-500 opacity-50"><i class="fa-solid fa-wind text-xl"></i></div>
+        <div>
+            <h1 class="text-xl font-black italic">ArcFlow <span class="text-blue-500 font-bold text-[10px] not-italic uppercase">Pro V26</span></h1>
+            <p class="text-[9px] text-slate-500 uppercase tracking-widest">Universal Multi-Asset Router</p>
+        </div>
+        <div class="flex items-center gap-3">
+            <i class="fa-solid fa-gear text-slate-600"></i>
+            <div class="bg-blue-900/20 p-2 rounded-lg border border-blue-500/30">
+                <i class="fa-solid fa-a text-blue-500"></i>
+            </div>
+        </div>
     </div>
 
-    <div class="glass p-6 mb-6">
-        <div class="flex gap-2 mb-8">
-            <button id="connectBtn" onclick="handleConnect()" class="bg-blue-600 px-6 py-2 rounded-lg text-xs font-bold shadow-lg shadow-blue-900/40">Connect</button>
-            <button class="bg-slate-800 px-4 py-2 rounded-lg text-[10px] font-bold">Arc Net</button>
-            <button class="bg-slate-800 px-4 py-2 rounded-lg text-[10px] font-bold">Arb Net</button>
+    <div class="glass-panel p-6 mb-6">
+        <div class="flex justify-between items-center mb-8">
+            <button onclick="handleConnect()" id="connectBtn" class="bg-blue-700 px-6 py-2 rounded-lg text-[10px] font-bold">Connect</button>
+            <div class="flex gap-2">
+                <button class="bg-slate-800 px-4 py-2 rounded-lg text-[10px] font-bold">Arc Net</button>
+                <button class="bg-slate-800 px-4 py-2 rounded-lg text-[10px] font-bold">Arb Net</button>
+                <button class="bg-slate-800 px-3 py-2 rounded-lg" onclick="location.reload()"><i class="fa-solid fa-rotate-right text-[10px]"></i></button>
+            </div>
         </div>
 
-        <div class="flex justify-between items-end">
+        <div class="flex justify-between items-start">
             <div>
-                <span id="dot" class="h-2 w-2 bg-red-500 rounded-full inline-block mr-1"></span>
-                <span id="status" class="text-[10px] text-slate-500 font-bold uppercase">Disconnected</span>
+                <span id="statusDot" class="h-2 w-2 bg-red-500 rounded-full inline-block animate-pulse"></span>
+                <span id="statusText" class="text-[10px] text-slate-500 font-bold uppercase ml-1 italic">Idle</span>
             </div>
             <div class="text-right">
-                <p class="text-[10px] text-blue-500 font-black uppercase mb-1">Arc Testnet</p>
-                <p id="balUSDC" class="text-2xl font-black">0.00 <span class="text-xs text-slate-500">USDC</span></p>
+                <p class="text-[9px] text-blue-500 font-black uppercase mb-2">Arc Testnet</p>
+                <p class="text-lg font-black tracking-tight">0.00 <span class="text-[10px] text-slate-500">USDC</span></p>
+                <p class="text-xs font-bold text-slate-500">0.00 <span class="text-[9px]">FURC</span></p>
+                <p class="text-xs font-bold text-yellow-500/80">0.00 <span class="text-[9px]">USYC</span></p>
+                <p class="text-xs font-bold text-blue-400 mt-4">0.00 <span class="text-[9px] text-slate-600">USDC (ARB)</span></p>
             </div>
         </div>
     </div>
 
-    <div class="flex gap-2 mb-6 overflow-x-auto no-scrollbar">
-        <div id="btn-transfer" onclick="switchTab('transfer')" class="tab-btn tab-active">Transfer</div>
-        <div id="btn-swap" onclick="switchTab('swap')" class="tab-btn">Swap</div>
-        <div id="btn-pools" onclick="switchTab('pools')" class="tab-btn">Pools</div>
-        <div id="btn-bridge" onclick="switchTab('bridge')" class="tab-btn">Bridge</div>
+    <div class="flex gap-6 mb-6 px-2 border-b border-slate-800">
+        <div id="tab-transfer" onclick="switchTab('transfer')" class="tab-item tab-active">TRANSFER</div>
+        <div id="tab-swap" onclick="switchTab('swap')" class="tab-item">SWAP</div>
+        <div id="tab-pools" onclick="switchTab('pools')" class="tab-item">POOLS</div>
+        <div id="tab-bridge" onclick="switchTab('bridge')" class="tab-item">BRIDGE</div>
     </div>
 
-    <div class="glass p-6 min-h-[350px]">
+    <div class="glass-panel p-6 mb-10">
         <div id="ui-transfer">
-            <p class="text-[10px] font-bold text-slate-500 uppercase mb-6 italic tracking-widest">Send Spiritual Energy</p>
-            <input type="text" placeholder="Recipient 0x..." class="w-full bg-slate-900/50 border border-slate-800 p-4 rounded-xl text-sm mb-4 outline-none">
-            <input type="number" placeholder="0.00" class="w-full bg-slate-950 border border-slate-800 p-6 rounded-2xl text-3xl font-black mb-8 text-center outline-none">
-            <button onclick="executeTx()" class="w-full bg-blue-600 py-4 rounded-xl font-black uppercase text-xs tracking-[0.3em]">Execute Sonic Route</button>
+            <p class="text-[10px] font-bold text-slate-500 uppercase italic mb-6 tracking-widest"><i class="fa-solid fa-paper-plane mr-2"></i>Send Asset</p>
+            <select class="w-full bg-slate-900 border border-slate-800 p-4 rounded-xl text-sm mb-4 outline-none"><option>USDC (Stablecoin)</option></select>
+            <input type="text" placeholder="Recipient address (0x...)" class="w-full bg-slate-900 border border-slate-800 p-4 rounded-xl text-sm mb-4 font-mono">
+            
+            <div class="flex justify-between items-center mb-6">
+                <span class="text-[9px] font-bold text-slate-600 uppercase">Quick Select:</span>
+                <div class="flex gap-2">
+                    <button class="bg-slate-800 px-3 py-1 rounded text-[10px] font-bold">10</button>
+                    <button class="bg-slate-800 px-3 py-1 rounded text-[10px] font-bold">50</button>
+                    <button class="bg-blue-900/30 text-blue-400 px-3 py-1 rounded text-[10px] font-bold">MAX</button>
+                </div>
+            </div>
+
+            <input type="number" placeholder="0.00" class="w-full bg-slate-950 border border-slate-800 p-6 rounded-2xl text-4xl font-black mb-8 text-center outline-none">
+            <button onclick="executeAction()" class="w-full action-btn py-5 text-[11px] uppercase tracking-[0.3em]">Confirm Send</button>
         </div>
 
-        <div id="ui-swap" class="hidden-ui text-center py-20 opacity-40">
-            <i class="fa-solid fa-arrows-rotate text-4xl mb-4 text-blue-500"></i>
-            <p class="text-[10px] font-bold uppercase tracking-widest">Swap Engine Initializing...</p>
+        <div id="ui-swap" class="hidden-section text-center py-20">
+            <i class="fa-solid fa-shuffle text-4xl text-blue-500 mb-4 opacity-40"></i>
+            <p class="text-xs font-bold text-slate-500 uppercase tracking-widest">Swap Engine Ready</p>
         </div>
     </div>
 
-    <audio id="bgMusic" loop>
-        <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-15.mp3" type="audio/mpeg">
-    </audio>
-    <audio id="beepSound">
-        <source src="https://assets.mixkit.co/active_storage/sfx/2571/2571-preview.mp3" type="audio/mpeg">
-    </audio>
+    <div class="space-y-10 mb-20">
+        <div>
+            <h3 class="text-[10px] font-black text-blue-500 uppercase mb-4 italic tracking-widest">Ecosystem & Socials</h3>
+            <div class="grid grid-cols-3 gap-3">
+                <div class="grid-card"><i class="fa-solid fa-link block mb-2 text-blue-400"></i><span class="text-[9px]">Website</span></div>
+                <div class="grid-card"><i class="fa-solid fa-book block mb-2 text-slate-400"></i><span class="text-[9px]">Docs</span></div>
+                <div class="grid-card"><i class="fa-solid fa-house block mb-2 text-slate-400"></i><span class="text-[9px]">House</span></div>
+            </div>
+            <div class="grid grid-cols-2 gap-3 mt-3">
+                <div class="grid-card"><i class="fa-brands fa-x-twitter block mb-2"></i><span class="text-[9px]">Twitter</span></div>
+                <div class="grid-card"><i class="fa-brands fa-discord block mb-2"></i><span class="text-[9px]">Discord</span></div>
+            </div>
+        </div>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/5.7.2/ethers.umd.min.js"></script>
+        <div class="glass-panel p-6">
+            <h3 class="text-[10px] font-black text-blue-400 uppercase mb-6 italic tracking-widest text-center"><i class="fa-solid fa-envelope mr-2"></i>Support & Feedback</h3>
+            <input type="text" placeholder="Your Name (Optional)" class="w-full bg-slate-900 border border-slate-800 p-4 rounded-xl text-sm mb-4 outline-none">
+            <textarea placeholder="Report an issue or suggest a feature..." class="w-full bg-slate-900 border border-slate-800 p-4 rounded-xl text-sm mb-6 h-24 outline-none"></textarea>
+            <button class="w-full action-btn py-4 text-[10px] uppercase tracking-widest">Submit Feedback</button>
+        </div>
+    </div>
+
+    <audio id="bgMusic" loop><source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-15.mp3" type="audio/mpeg"></audio>
+    <audio id="beep"><source src="https://assets.mixkit.co/active_storage/sfx/2571/2571-preview.mp3" type="audio/mpeg"></audio>
+
     <script>
         const music = document.getElementById('bgMusic');
-        const beep = document.getElementById('beepSound');
-        let isStarted = false;
+        const beep = document.getElementById('beep');
+        let musicActive = false;
 
-        // Har click par Beep aur Music start logic
-        function playBeep() { 
-            beep.volume = 0.3;
-            beep.currentTime = 0;
-            beep.play(); 
-        }
+        // Sound Logic
+        function playBeep() { beep.currentTime = 0; beep.play(); }
 
-        function startExperience() {
-            if(!isStarted) {
-                music.volume = 0.15; // Soft music
+        document.body.addEventListener('click', () => {
+            if(!musicActive) {
+                music.volume = 0.15;
                 music.play();
-                isStarted = true;
-                const talk = new SpeechSynthesisUtterance("Arc Flow Gateway Activated");
+                musicActive = true;
+                const talk = new SpeechSynthesisUtterance("Arc Flow Gateway Online");
                 window.speechSynthesis.speak(talk);
             }
+        });
+
+        // Tab Switching Logic
+        function switchTab(id) {
+            playBeep();
+            document.querySelectorAll('.tab-item').forEach(t => t.classList.remove('tab-active'));
+            document.getElementById('tab-' + id).classList.add('tab-active');
+            
+            document.getElementById('ui-transfer').classList.add('hidden-section');
+            document.getElementById('ui-swap').classList.add('hidden-section');
+            
+            if(id === 'transfer') document.getElementById('ui-transfer').classList.remove('hidden-section');
+            if(id === 'swap') document.getElementById('ui-swap').classList.remove('hidden-section');
         }
 
-        function switchTab(target) {
+        function handleConnect() {
             playBeep();
-            startExperience();
-            
-            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('tab-active'));
-            document.getElementById('btn-' + target).classList.add('tab-active');
-            
-            document.getElementById('ui-transfer').classList.add('hidden-ui');
-            document.getElementById('ui-swap').classList.add('hidden-ui');
-            
-            if(target === 'transfer') document.getElementById('ui-transfer').classList.remove('hidden-ui');
-            if(target === 'swap') document.getElementById('ui-swap').classList.remove('hidden-ui');
+            document.getElementById('statusDot').className = "h-2 w-2 bg-green-500 rounded-full inline-block";
+            document.getElementById('statusText').innerText = "Connected";
+            document.getElementById('connectBtn').innerText = "0x2091...";
         }
 
-        async function handleConnect() {
+        function executeAction() {
             playBeep();
-            startExperience();
-            if(window.ethereum) {
-                const p = new ethers.providers.Web3Provider(window.ethereum);
-                await p.send("eth_requestAccounts", []);
-                document.getElementById('dot').className = "h-2 w-2 bg-green-500 rounded-full";
-                document.getElementById('status').innerText = "Connected";
-            }
-        }
-
-        function executeTx() {
-            playBeep();
-            // Transaction shuru: Music BAND
-            music.pause();
-            const talk = new SpeechSynthesisUtterance("Processing Transaction. Please wait.");
+            music.pause(); // Transaction music stop
+            const talk = new SpeechSynthesisUtterance("Executing transaction route. Silence initiated.");
             window.speechSynthesis.speak(talk);
             
-            alert("Transaction Processing...");
-
+            alert("Transaction in Progress...");
+            
             setTimeout(() => {
-                // Transaction puri: Music CHALNE LAGA
-                music.play();
-                const done = new SpeechSynthesisUtterance("Transaction Successful. Gateway restored.");
+                music.play(); // Success music resume
+                const done = new SpeechSynthesisUtterance("Route successful. Balance updated.");
                 window.speechSynthesis.speak(done);
-                alert("Success! Check Explorer.");
-            }, 5000);
+                alert("Success!");
+            }, 4000);
         }
-
-        // Screen par kahin bhi click karne se music activate hoga
-        document.getElementById('mainBody').addEventListener('click', startExperience, {once: true});
-    </script>// 1. Ruhani Music Setup
-const music = new Audio('https://www.soundhelix.com/examples/mp3/SoundHelix-Song-15.mp3');
-music.loop = true;
-music.volume = 0.15;
-
-// 2. Beep Sound Setup
-const beep = new Audio('https://assets.mixkit.co/active_storage/sfx/2571/2571-preview.mp3');
-beep.volume = 0.2;
-
-// Har click par Beep aur Music start logic
-document.addEventListener('click', () => {
-    if (music.paused) {
-        music.play();
-        const msg = new SpeechSynthesisUtterance("ArcFlow System Online");
-        window.speechSynthesis.speak(msg);
-    }
-    // Button click par beep bajao
-    if (event.target.tagName === 'BUTTON' || event.target.closest('.tab-item')) {
-        beep.currentTime = 0;
-        beep.play();
-    }
-}, { once: false });
-
-// 3. Transaction Logic: Music band/shuru karna
-function handleTransaction() {
-    music.pause(); // Transaction shuru hote hi music BAND
-    console.log("Transaction in progress...");
-    
-    // Simulate transaction end (Aap apne real function mein ye use karein)
-    setTimeout(() => {
-        music.play(); // Transaction puri hote hi music CHALNE LAGA
-        console.log("Transaction Complete");
-    }, 5000);
-}
-    <script>
-    const ruhaniMusic = new Audio('https://www.soundhelix.com/examples/mp3/SoundHelix-Song-15.mp3');
-    const beepSound = new Audio('https://assets.mixkit.co/active_storage/sfx/2571/2571-preview.mp3');
-    ruhaniMusic.loop = true;
-
-    document.addEventListener('click', () => {
-        // Pehle click par music shuru
-        if (ruhaniMusic.paused) { 
-            ruhaniMusic.play(); 
-            ruhaniMusic.volume = 0.2;
-        }
-        // Har button click par Beep
-        if (event.target.tagName === 'BUTTON') {
-            beepSound.currentTime = 0;
-            beepSound.play();
-        }
-    }, { once: false });
-
-    // Transaction ke waqt music control karne ke liye
-    function toggleMusic(play) {
-        play ? ruhaniMusic.play() : ruhaniMusic.pause();
-    }
     </script>
-    
 </body>
     </html>
     
