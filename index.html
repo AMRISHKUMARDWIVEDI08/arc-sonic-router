@@ -1,3 +1,36 @@
-export function isValidAddress(addr) {
-  return /^0x[a-fA-F0-9]{40}$/.test(addr);
-}
+import { connectWallet } from "./wallet.js";
+import { simulateTx } from "./simulator.js";
+import { estimateGas } from "./gas.js";
+import { trackTx } from "./tracker.js";
+
+let user;
+
+document.getElementById("connect").onclick = async () => {
+  user = await connectWallet();
+};
+
+document.getElementById("execute").onclick = async () => {
+  const tx = {
+    from: user,
+    to: document.getElementById("address").value,
+    value: "0x0"
+  };
+
+  const simulation = await simulateTx(window.ethereum, tx);
+
+  if (!simulation.success) {
+    alert(simulation.error);
+    return;
+  }
+
+  const gas = await estimateGas(window.ethereum, tx);
+  console.log("gas:", gas);
+
+  const hash = await window.ethereum.request({
+    method: "eth_sendTransaction",
+    params: [tx]
+  });
+
+  const status = await trackTx(window.ethereum, hash);
+  alert(status);
+};
