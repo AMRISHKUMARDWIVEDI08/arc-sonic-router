@@ -1,10 +1,11 @@
-export async function trackTx(provider, hash) {
-  let receipt = null;
-
-  while (!receipt) {
-    receipt = await provider.getTransactionReceipt(hash);
-    await new Promise(r => setTimeout(r, 2000));
+export function decodeError(err) {
+  if (err.message.includes("insufficient funds")) {
+    return "not enough balance";
   }
 
-  return receipt.status ? "confirmed" : "failed";
+  if (err.message.includes("gas")) {
+    return "gas estimation failed";
+  }
+
+  return "unknown error";
 }
