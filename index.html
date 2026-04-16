@@ -1,19 +1,12 @@
-arc-sonic-router/
-│
-├── index.html
-├── /css
-│   └── styles.css
-├── /js
-│   ├── app.js
-│   ├── wallet.js
-│   ├── router.js
-│   ├── simulator.js
-│   ├── gas.js
-│   ├── tracker.js
-│   ├── errors.js
-│   └── utils.js
-│
-├── /config
-│   └── networks.js
-│
-└── README.md
+export async function connectWallet() {
+  if (!window.ethereum) {
+    alert("install metamask");
+    return;
+  }
+
+  const accounts = await window.ethereum.request({
+    method: "eth_requestAccounts",
+  });
+
+  return accounts[0];
+}
