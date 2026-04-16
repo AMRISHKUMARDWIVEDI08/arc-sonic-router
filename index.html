@@ -1,105 +1,19 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SonicFlow Ultimate - Amrish</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/5.7.2/ethers.umd.min.js"></script>
-    <style>
-        body { background: #000; color: white; font-family: sans-serif; overflow-x: hidden; }
-        .glass { background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(15px); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 28px; }
-        .btn-blue { background: #2563eb; box-shadow: 0 0 15px rgba(37, 99, 235, 0.4); }
-        .input-box { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); }
-    </style>
-</head>
-<body class="p-4 min-h-screen">
-
-    <div class="flex justify-between items-center mb-8 px-2">
-        <div>
-            <h1 class="text-2xl font-black italic text-green-400 tracking-tighter">SONIC<span class="text-white">FLOW</span></h1>
-            <p class="text-[8px] text-slate-500 font-bold tracking-widest uppercase">Network Secure</p>
-        </div>
-        <button id="walletBtn" onclick="handleWallet()" class="glass px-4 py-2 text-[10px] font-black text-blue-400 uppercase">Connect Wallet</button>
-    </div>
-
-    <div class="glass p-6 mb-6">
-        <div class="flex justify-between text-[10px] font-black text-slate-500 uppercase mb-8 border-b border-white/5 pb-2">
-            <span class="text-green-400 border-b-2 border-green-400">Transfer</span>
-            <span>Bridge</span>
-            <span>Swap</span>
-        </div>
-
-        <div class="input-box rounded-2xl p-4 mb-4">
-            <label class="text-[9px] font-bold text-slate-500 uppercase mb-2 block">Recipient Address</label>
-            <input type="text" id="targetAddress" placeholder="0x..." class="bg-transparent w-full text-xs outline-none text-blue-400 font-mono">
-        </div>
-
-        <div class="input-box rounded-2xl p-4 mb-8">
-            <div class="flex justify-between mb-2">
-                <span class="text-[9px] font-bold text-slate-500 uppercase">Amount</span>
-                <span id="balDisplay" class="text-[9px] font-bold text-green-500">Balance: 0.00</span>
-            </div>
-            <div class="flex justify-between items-center">
-                <input type="number" id="sendAmt" placeholder="0.00" class="bg-transparent text-3xl font-black outline-none w-1/2">
-                <span class="bg-white/10 px-3 py-1 rounded-lg text-xs font-bold">USDC</span>
-            </div>
-        </div>
-
-        <button onclick="executeTransfer()" class="w-full btn-blue py-5 rounded-2xl font-black text-xs uppercase tracking-widest active:scale-95 transition-all">
-            Execute Sonic Route
-        </button>
-    </div>
-
-    <script>
-        let address = null;
-
-        // Sound System
-        function speak(text) {
-            const msg = new SpeechSynthesisUtterance(text);
-            msg.rate = 1.1;
-            window.speechSynthesis.speak(msg);
-        }
-
-        async function handleWallet() {
-            if (address) {
-                // Disconnect logic
-                address = null;
-                document.getElementById('walletBtn').innerText = "Connect Wallet";
-                document.getElementById('balDisplay').innerText = "Balance: 0.00";
-                speak("Wallet Disconnected");
-                return;
-            }
-
-            if (window.ethereum) {
-                try {
-                    const provider = new ethers.providers.Web3Provider(window.ethereum);
-                    await provider.send("eth_requestAccounts", []);
-                    const signer = provider.getSigner();
-                    address = await signer.getAddress();
-                    
-                    document.getElementById('walletBtn').innerText = address.substring(0,6)+"..."+address.substring(38);
-                    document.getElementById('balDisplay').innerText = "Balance: 1,250.00";
-                    speak("Wallet Connected");
-                } catch (e) {
-                    alert("Connection Failed!");
-                }
-            } else {
-                alert("Use Mises Browser!");
-            }
-        }
-
-        function executeTransfer() {
-            const amt = document.getElementById('sendAmt').value;
-            const addr = document.getElementById('targetAddress').value;
-
-            if (!address) return speak("Connect wallet first");
-            if (!addr || !amt) return speak("Fill all details");
-
-            // Animation & Sound
-            speak("Transaction Successful");
-            alert("Sent " + amt + " USDC to " + addr);
-        }
-    </script>
-</body>
-</html>
+arc-sonic-router/
+│
+├── index.html
+├── /css
+│   └── styles.css
+├── /js
+│   ├── app.js
+│   ├── wallet.js
+│   ├── router.js
+│   ├── simulator.js
+│   ├── gas.js
+│   ├── tracker.js
+│   ├── errors.js
+│   └── utils.js
+│
+├── /config
+│   └── networks.js
+│
+└── README.md
