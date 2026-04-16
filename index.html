@@ -3,155 +3,139 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ArcFlow Pro V26 - Official</title>
+    <title>ArcFlow Pro V26 - Ruhani Edition</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        body { background: #070b14; color: #f8fafc; font-family: sans-serif; }
-        .glass { background: rgba(15, 23, 42, 0.7); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.05); border-radius: 20px; }
-        .btn-blue { background: #2563eb; color: white; border-radius: 10px; font-weight: 700; transition: 0.2s; }
-        .tab-btn { background: #1e293b; color: #94a3b8; padding: 10px 18px; border-radius: 10px; font-size: 11px; font-weight: 700; cursor: pointer; }
-        .tab-active { background: #2563eb !important; color: white !important; }
+        body { background: #020617; color: #f8fafc; font-family: sans-serif; overflow-x: hidden; }
+        .glass { background: rgba(15, 23, 42, 0.8); backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.05); border-radius: 24px; }
+        .tab-btn { background: #1e293b; color: #94a3b8; padding: 10px 20px; border-radius: 12px; font-size: 11px; font-weight: 800; cursor: pointer; transition: 0.3s; }
+        .tab-active { background: #3b82f6 !important; color: white !important; box-shadow: 0 0 15px rgba(59, 130, 246, 0.3); }
         .hidden-ui { display: none; }
-        .grid-card { background: #111827; border: 1px solid #1f2937; border-radius: 12px; padding: 12px; text-align: center; font-size: 10px; font-weight: bold; }
     </style>
 </head>
-<body class="p-4 pb-24" id="appBody">
+<body class="p-4 pb-24" id="mainBody">
 
-    <div class="flex justify-between items-center mb-6 px-1">
-        <div>
-            <h1 class="text-xl font-black italic">ArcFlow <span class="text-blue-500 font-medium text-xs not-italic uppercase">Pro V26</span></h1>
-            <p class="text-[9px] text-slate-500 uppercase tracking-widest">Universal Multi-Asset Router</p>
-        </div>
-        <div class="p-2 glass border border-blue-500/20 rounded-xl">
-            <i class="fa-solid fa-braille text-blue-500 text-lg"></i>
-        </div>
+    <div class="flex justify-between items-center mb-6">
+        <h1 class="text-xl font-black italic tracking-tighter">ArcFlow <span class="text-blue-500 font-bold text-[10px] not-italic uppercase">Pro V26</span></h1>
+        <div class="text-blue-500 opacity-50"><i class="fa-solid fa-wind text-xl"></i></div>
     </div>
 
     <div class="glass p-6 mb-6">
         <div class="flex gap-2 mb-8">
-            <button id="connectBtn" onclick="handleConnect()" class="btn-blue px-6 py-2.5 text-xs">Connect</button>
+            <button id="connectBtn" onclick="handleConnect()" class="bg-blue-600 px-6 py-2 rounded-lg text-xs font-bold shadow-lg shadow-blue-900/40">Connect</button>
             <button class="bg-slate-800 px-4 py-2 rounded-lg text-[10px] font-bold">Arc Net</button>
             <button class="bg-slate-800 px-4 py-2 rounded-lg text-[10px] font-bold">Arb Net</button>
-            <button class="bg-slate-800 px-3 py-2 rounded-lg" onclick="location.reload()"><i class="fa-solid fa-rotate"></i></button>
         </div>
 
-        <div class="flex justify-between items-start">
-            <div class="flex items-center gap-2">
-                <span id="dot" class="h-2 w-2 bg-red-500 rounded-full"></span>
+        <div class="flex justify-between items-end">
+            <div>
+                <span id="dot" class="h-2 w-2 bg-red-500 rounded-full inline-block mr-1"></span>
                 <span id="status" class="text-[10px] text-slate-500 font-bold uppercase">Disconnected</span>
             </div>
             <div class="text-right">
-                <p class="text-[9px] text-blue-500 font-black uppercase mb-2 border-b border-blue-500/10 pb-1">Arc Testnet</p>
-                <p id="balUSDC" class="text-lg font-bold">0.00 <span class="text-[10px] text-slate-500">USDC</span></p>
-                <p class="text-xs font-bold text-slate-400">0.00 <span class="text-[9px]">FURC</span></p>
-                <p class="text-xs font-bold text-yellow-500">0.00 <span class="text-[9px]">USYC</span></p>
-                
-                <p class="text-[9px] text-purple-400 font-black uppercase mt-4 mb-1">Arbitrum Sepolia</p>
-                <p class="text-xs font-bold text-green-400">0.00 <span class="text-[9px]">USDC</span></p>
+                <p class="text-[10px] text-blue-500 font-black uppercase mb-1">Arc Testnet</p>
+                <p id="balUSDC" class="text-2xl font-black">0.00 <span class="text-xs text-slate-500">USDC</span></p>
             </div>
         </div>
     </div>
 
-    <div class="flex gap-2 mb-4 overflow-x-auto no-scrollbar">
+    <div class="flex gap-2 mb-6 overflow-x-auto no-scrollbar">
         <div id="btn-transfer" onclick="switchTab('transfer')" class="tab-btn tab-active">Transfer</div>
         <div id="btn-swap" onclick="switchTab('swap')" class="tab-btn">Swap</div>
         <div id="btn-pools" onclick="switchTab('pools')" class="tab-btn">Pools</div>
         <div id="btn-bridge" onclick="switchTab('bridge')" class="tab-btn">Bridge</div>
     </div>
 
-    <div class="glass p-6 mb-8 min-h-[300px]">
+    <div class="glass p-6 min-h-[350px]">
         <div id="ui-transfer">
-            <p class="text-[10px] font-bold text-slate-500 uppercase italic mb-6"><i class="fa-solid fa-paper-plane mr-2"></i>Send Asset</p>
-            <select class="w-full bg-slate-900 border border-slate-800 p-4 rounded-xl text-sm mb-4 outline-none"><option>USDC (Stablecoin)</option></select>
-            <input type="text" placeholder="Recipient 0x..." class="w-full bg-slate-900 border border-slate-800 p-4 rounded-xl text-sm mb-6 font-mono">
-            <button onclick="simulateTx()" class="w-full btn-blue py-4 text-xs uppercase tracking-widest">Confirm Send</button>
+            <p class="text-[10px] font-bold text-slate-500 uppercase mb-6 italic tracking-widest">Send Spiritual Energy</p>
+            <input type="text" placeholder="Recipient 0x..." class="w-full bg-slate-900/50 border border-slate-800 p-4 rounded-xl text-sm mb-4 outline-none">
+            <input type="number" placeholder="0.00" class="w-full bg-slate-950 border border-slate-800 p-6 rounded-2xl text-3xl font-black mb-8 text-center outline-none">
+            <button onclick="executeTx()" class="w-full bg-blue-600 py-4 rounded-xl font-black uppercase text-xs tracking-[0.3em]">Execute Sonic Route</button>
         </div>
 
-        <div id="ui-swap" class="hidden-ui text-center py-20">
-            <i class="fa-solid fa-shuffle text-4xl text-blue-500 mb-4 opacity-50"></i>
-            <p class="text-xs font-bold uppercase tracking-[0.3em] text-slate-500">Swap Engine Ready</p>
-        </div>
-        <div id="ui-pools" class="hidden-ui text-center py-20">
-            <i class="fa-solid fa-water text-4xl text-blue-500 mb-4 opacity-50"></i>
-            <p class="text-xs font-bold uppercase tracking-[0.3em] text-slate-500">Liquidity Pools</p>
-        </div>
-        <div id="ui-bridge" class="hidden-ui text-center py-20">
-            <i class="fa-solid fa-bridge text-4xl text-blue-500 mb-4 opacity-50"></i>
-            <p class="text-xs font-bold uppercase tracking-[0.3em] text-slate-500">CCTP Bridge Active</p>
+        <div id="ui-swap" class="hidden-ui text-center py-20 opacity-40">
+            <i class="fa-solid fa-arrows-rotate text-4xl mb-4 text-blue-500"></i>
+            <p class="text-[10px] font-bold uppercase tracking-widest">Swap Engine Initializing...</p>
         </div>
     </div>
 
-    <div class="space-y-8 px-1">
-        <div>
-            <h3 class="text-[10px] font-black text-blue-500 uppercase mb-4 italic">Arc Network</h3>
-            <div class="grid grid-cols-3 gap-2">
-                <div class="grid-card"><i class="fa-solid fa-globe block mb-2 text-blue-400"></i>Website</div>
-                <div class="grid-card"><i class="fa-solid fa-file-lines block mb-2 text-slate-400"></i>Docs</div>
-                <div class="grid-card"><i class="fa-solid fa-house-user block mb-2 text-slate-400"></i>House</div>
-            </div>
-        </div>
-    </div>
-
-    <audio id="bgMusic" loop preload="auto">
-        <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-8.mp3" type="audio/mpeg">
+    <audio id="bgMusic" loop>
+        <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-15.mp3" type="audio/mpeg">
+    </audio>
+    <audio id="beepSound">
+        <source src="https://assets.mixkit.co/active_storage/sfx/2571/2571-preview.mp3" type="audio/mpeg">
     </audio>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/5.7.2/ethers.umd.min.js"></script>
     <script>
-        let music = document.getElementById('bgMusic');
-        let musicStarted = false;
+        const music = document.getElementById('bgMusic');
+        const beep = document.getElementById('beepSound');
+        let isStarted = false;
 
-        // Force Music & Interaction
+        // Har click par Beep aur Music start logic
+        function playBeep() { 
+            beep.volume = 0.3;
+            beep.currentTime = 0;
+            beep.play(); 
+        }
+
         function startExperience() {
-            if(!musicStarted) {
-                music.volume = 0.2;
-                music.play().catch(e => console.log("Music blocked by browser"));
-                musicStarted = true;
-                const talk = new SpeechSynthesisUtterance("Gateway Connected");
+            if(!isStarted) {
+                music.volume = 0.15; // Soft music
+                music.play();
+                isStarted = true;
+                const talk = new SpeechSynthesisUtterance("Arc Flow Gateway Activated");
                 window.speechSynthesis.speak(talk);
             }
         }
 
-        // Tab Switching Logic
         function switchTab(target) {
-            startExperience(); // Ensure music/voice triggers on any button click
+            playBeep();
+            startExperience();
             
-            // 1. Reset Buttons
-            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('tab-active'));
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('tab-active'));
             document.getElementById('btn-' + target).classList.add('tab-active');
             
-            // 2. Reset UI Content
             document.getElementById('ui-transfer').classList.add('hidden-ui');
             document.getElementById('ui-swap').classList.add('hidden-ui');
-            document.getElementById('ui-pools').classList.add('hidden-ui');
-            document.getElementById('ui-bridge').classList.add('hidden-ui');
             
-            // 3. Show Active Content
-            document.getElementById('ui-' + target).classList.remove('hidden-ui');
+            if(target === 'transfer') document.getElementById('ui-transfer').classList.remove('hidden-ui');
+            if(target === 'swap') document.getElementById('ui-swap').classList.remove('hidden-ui');
         }
 
         async function handleConnect() {
+            playBeep();
             startExperience();
             if(window.ethereum) {
-                try {
-                    const p = new ethers.providers.Web3Provider(window.ethereum);
-                    await p.send("eth_requestAccounts", []);
-                    const addr = await p.getSigner().getAddress();
-                    document.getElementById('connectBtn').innerText = addr.substring(0,6)+"...";
-                    document.getElementById('dot').className = "h-2 w-2 bg-green-500 rounded-full";
-                    document.getElementById('status').innerText = "Connected";
-                } catch(e) { alert("Connect failed"); }
+                const p = new ethers.providers.Web3Provider(window.ethereum);
+                await p.send("eth_requestAccounts", []);
+                document.getElementById('dot').className = "h-2 w-2 bg-green-500 rounded-full";
+                document.getElementById('status').innerText = "Connected";
             }
         }
 
-        function simulateTx() {
-            startExperience();
-            alert("Sonic Route Executed Successfully!");
+        function executeTx() {
+            playBeep();
+            // Transaction shuru: Music BAND
+            music.pause();
+            const talk = new SpeechSynthesisUtterance("Processing Transaction. Please wait.");
+            window.speechSynthesis.speak(talk);
+            
+            alert("Transaction Processing...");
+
+            setTimeout(() => {
+                // Transaction puri: Music CHALNE LAGA
+                music.play();
+                const done = new SpeechSynthesisUtterance("Transaction Successful. Gateway restored.");
+                window.speechSynthesis.speak(done);
+                alert("Success! Check Explorer.");
+            }, 5000);
         }
 
-        // Any click on body starts music if blocked
-        document.getElementById('appBody').addEventListener('click', startExperience);
+        // Screen par kahin bhi click karne se music activate hoga
+        document.getElementById('mainBody').addEventListener('click', startExperience, {once: true});
     </script>
 </body>
 </html>
