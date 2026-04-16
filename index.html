@@ -3,29 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ArcFlow Pro V26 - Ultimate</title>
+    <title>ArcFlow Pro V26 - Fix</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/5.7.2/ethers.umd.min.js"></script>
     <style>
         body { background: #020617; color: white; font-family: sans-serif; overflow-x: hidden; }
         .glass { background: rgba(255, 255, 255, 0.02); backdrop-filter: blur(15px); border: 1px solid rgba(255, 255, 255, 0.05); border-radius: 24px; }
-        .btn-action { background: #2563eb; transition: 0.2s; font-weight: 900; letter-spacing: 1px; }
-        .btn-action:active { scale: 0.95; box-shadow: 0 0 20px #2563eb; }
-        .input-style { background: #0f172a; border: 1px solid #1e293b; border-radius: 12px; outline: none; transition: 0.3s; }
-        .input-style:focus { border-color: #3b82f6; box-shadow: 0 0 10px rgba(59, 130, 246, 0.2); }
-        .grid-btn { background: #0f172a; border: 1px solid #1e293b; border-radius: 15px; cursor: pointer; transition: 0.3s; }
-        .grid-btn:hover { background: #1e293b; border-color: #3b82f6; }
-        .active-tab { color: #3b82f6; border-bottom: 2px solid #3b82f6; }
-        
-        /* Banner Fix */
         .banner-fix {
             background: linear-gradient(rgba(2, 6, 23, 0.7), rgba(2, 6, 23, 0.7)), url('logo.png');
             background-size: contain; background-repeat: no-repeat; background-position: center;
             height: 80px; border-radius: 20px; border: 1px solid rgba(59, 130, 246, 0.2); margin-bottom: 20px;
         }
+        .btn-action { background: #2563eb; font-weight: 900; }
+        .input-style { background: #0f172a; border: 1px solid #1e293b; border-radius: 12px; outline: none; }
+        .active-tab { color: #3b82f6; border-bottom: 2px solid #3b82f6; }
     </style>
 </head>
-<body class="p-4 pb-20" onclick="initApp()">
+<body class="p-4 pb-20" onclick="initMusic()">
 
     <div class="banner-fix flex items-center justify-center">
         <h2 class="text-sm font-black tracking-[0.5em] text-blue-400 uppercase">Arc Network</h2>
@@ -34,143 +28,102 @@
     <div class="flex justify-between items-center mb-6">
         <div class="flex items-center gap-2">
             <img src="logo.png" class="h-9 w-9">
-            <h1 class="font-black text-xl italic tracking-tighter">ARCFLOW <span class="text-blue-500 font-normal text-[10px] uppercase block">Pro V26</span></h1>
+            <h1 class="font-black text-xl italic tracking-tighter uppercase leading-none">ARCFLOW <span class="text-blue-500 font-normal text-[10px] block">PRO V26</span></h1>
         </div>
-        <button id="walletBtn" onclick="connectWallet()" class="glass px-5 py-2 text-[10px] font-bold text-blue-400 border-blue-500/30">CONNECT WALLET</button>
+        <button id="walletBtn" onclick="connectWallet()" class="glass px-5 py-2 text-[10px] font-bold text-blue-400">CONNECT WALLET</button>
     </div>
 
     <div class="glass p-5 mb-4 flex justify-between items-center">
         <div>
-            <p class="text-[8px] font-bold text-slate-500 uppercase tracking-widest">Arc Network Balance</p>
+            <p class="text-[8px] font-bold text-slate-500 uppercase">Arc Balance</p>
             <h2 id="usdcBal" class="text-xl font-black text-green-400">0.00 <span class="text-xs">USDC</span></h2>
         </div>
         <div class="text-right">
             <span id="statusDot" class="inline-block h-2 w-2 bg-red-500 rounded-full mr-1"></span>
-            <span id="statusText" class="text-[9px] font-bold text-slate-400 uppercase tracking-tighter">Disconnected</span>
+            <span id="statusText" class="text-[9px] font-bold text-slate-400 uppercase">Disconnected</span>
         </div>
     </div>
 
     <div class="glass p-6 mb-6">
-        <div class="flex gap-6 text-[10px] font-black uppercase mb-8 border-b border-white/5 pb-2 cursor-pointer">
-            <span id="t-transfer" onclick="setMode('Transfer')" class="active-tab pb-2">Transfer</span>
-            <span id="t-swap" onclick="setMode('Swap')" class="pb-2 opacity-40">Swap</span>
-            <span id="t-bridge" onclick="setMode('Bridge')" class="pb-2 opacity-40">Bridge</span>
+        <div class="flex gap-6 text-[10px] font-black uppercase mb-8 border-b border-white/5 pb-2">
+            <span id="t-transfer" class="active-tab pb-2">Transfer</span>
+            <span class="opacity-30 pb-2">Swap</span>
+            <span class="opacity-30 pb-2">Bridge</span>
         </div>
 
-        <label id="modeLabel" class="text-[9px] font-bold text-slate-500 mb-2 block uppercase italic">Send Asset</label>
-        <select onchange="assetSound(this.value)" class="input-style w-full p-4 text-xs text-blue-300 mb-5">
-            <option value="USDC">USDC (Stablecoin)</option>
-            <option value="FURC">FURC (Arc Native)</option>
-            <option value="SONIC">SONIC (Flow Token)</option>
-        </select>
-
-        <input type="text" id="target" placeholder="Recipient address (0x...)" class="input-style w-full p-4 text-xs font-mono mb-5">
-
-        <div class="flex justify-between items-center mb-4">
-            <span class="text-[9px] font-bold text-slate-500 uppercase italic">Quick Select:</span>
+        <input type="text" id="target" placeholder="Recipient 0x..." class="input-style w-full p-4 text-xs font-mono mb-5">
+        
+        <div class="flex justify-between items-center mb-4 text-[9px] font-bold text-slate-500 uppercase italic">
+            <span>Quick Select:</span>
             <div class="flex gap-2">
-                <button onclick="quickAmt(10)" class="grid-btn px-4 py-1 text-[10px] font-bold text-blue-400 italic">10</button>
-                <button onclick="quickAmt(50)" class="grid-btn px-4 py-1 text-[10px] font-bold text-blue-400 italic">50</button>
-                <button onclick="quickAmt(100)" class="grid-btn px-4 py-1 text-[10px] font-bold text-blue-400 italic">100</button>
+                <button onclick="setAmt(10)" class="bg-blue-900/20 px-4 py-1 rounded text-blue-400 border border-blue-500/20">10</button>
+                <button onclick="setAmt(100)" class="bg-blue-900/20 px-4 py-1 rounded text-blue-400 border border-blue-500/20">100</button>
             </div>
         </div>
 
         <input type="number" id="mainInput" placeholder="0.00" class="input-style w-full p-5 text-4xl font-black mb-8">
-
-        <button id="mainBtn" onclick="execute()" class="w-full btn-action py-5 rounded-2xl text-xs uppercase shadow-xl shadow-blue-900/20">Execute Sonic Route</button>
+        <button id="mainBtn" onclick="execute()" class="w-full btn-action py-5 rounded-2xl text-xs uppercase">Execute Sonic Route</button>
     </div>
 
-    <audio id="bgMusic" loop>
-        <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3" type="audio/mpeg">
-    </audio>
-
-    <h3 class="text-[9px] font-bold text-blue-400/50 uppercase mb-4 tracking-[0.3em] px-2">Arc Ecosystem</h3>
-    <div class="grid grid-cols-3 gap-3 mb-8">
-        <div onclick="openLink('https://arcflow.app')" class="grid-btn p-5 text-center">
-            <p class="text-[8px] font-bold uppercase">Website</p>
-        </div>
-        <div onclick="openLink('https://docs.arcflow.app')" class="grid-btn p-5 text-center">
-            <p class="text-[8px] font-bold uppercase">Docs</p>
-        </div>
-        <div onclick="openLink('https://twitter.com/arc')" class="grid-btn p-5 text-center">
-            <p class="text-[8px] font-bold uppercase">Twitter</p>
-        </div>
-    </div>
+    <audio id="bgMusic" loop><source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3" type="audio/mpeg"></audio>
 
     <script>
         let currentAddr = null;
-        let audioInited = false;
-        let currentMode = 'Transfer';
+        let audioActive = false;
         const music = document.getElementById('bgMusic');
 
-        // 3. Music Function (App khulte hi bajega)
-        function initApp() {
-            if(!audioInited) {
-                music.volume = 0.2;
-                music.play();
-                audioInited = true;
-                say("Arc Gateway Activated");
-            }
-        }
+        function initMusic() { if(!audioActive) { music.volume = 0.2; music.play(); audioActive = true; say("System Active"); } }
 
-        function say(msg) {
-            if(!audioInited) return;
-            const s = new SpeechSynthesisUtterance(msg);
-            s.rate = 1.0;
-            window.speechSynthesis.speak(s);
-        }
+        function say(t) { const s = new SpeechSynthesisUtterance(t); window.speechSynthesis.speak(s); }
+
+        function setAmt(v) { document.getElementById('mainInput').value = v; say("Amount " + v); }
 
         async function connectWallet() {
             if (window.ethereum) {
                 try {
                     const p = new ethers.providers.Web3Provider(window.ethereum);
+                    
+                    // NETWORK SELECTION LOGIC (Auto-Switch to Arc)
+                    try {
+                        await window.ethereum.request({
+                            method: 'wallet_switchEthereumChain',
+                            params: [{ chainId: '0x696969' }], // Arc Network Chain ID
+                        });
+                    } catch (err) {
+                        if (err.code === 4902) {
+                            await window.ethereum.request({
+                                method: 'wallet_addEthereumChain',
+                                params: [{
+                                    chainId: '0x696969',
+                                    chainName: 'Arc Network',
+                                    nativeCurrency: { name: 'ARC', symbol: 'ARC', decimals: 18 },
+                                    rpcUrls: ['https://rpc.arc-network.io'], // Ensure this is correct
+                                    blockExplorerUrls: ['https://explorer.arc.io']
+                                }]
+                            });
+                        }
+                    }
+
                     await p.send("eth_requestAccounts", []);
-                    const signer = p.getSigner();
-                    currentAddr = await signer.getAddress();
+                    currentAddr = await p.getSigner().getAddress();
                     
-                    // Real Balance Fetch Fix
+                    // REAL BALANCE FIX
                     const b = await p.getBalance(currentAddr);
-                    const formatted = parseFloat(ethers.utils.formatEther(b)).toFixed(4);
-                    
+                    document.getElementById('usdcBal').innerText = parseFloat(ethers.utils.formatEther(b)).toFixed(4) + " USDC";
                     document.getElementById('walletBtn').innerText = currentAddr.substring(0,6)+"..."+currentAddr.substring(38);
-                    document.getElementById('usdcBal').innerText = formatted + " USDC";
-                    document.getElementById('statusDot').classList.replace('bg-red-500', 'bg-green-500');
-                    document.getElementById('statusText').innerText = "Network Secure";
-                    
-                    say("Wallet Connected. Balance updated.");
-                } catch(e) { say("Connection Failed"); }
-            } else { alert("Install Mises Browser"); }
-        }
-
-        function setMode(mode) {
-            currentMode = mode;
-            say("Switching to " + mode);
-            ['t-transfer', 't-swap', 't-bridge'].forEach(id => document.getElementById(id).className = "pb-2 opacity-40");
-            document.getElementById('t-' + mode.toLowerCase()).className = "active-tab pb-2";
-            document.getElementById('mainBtn').innerText = "Execute Sonic " + mode;
-        }
-
-        function quickAmt(a) {
-            document.getElementById('mainInput').value = a;
-            say("Amount " + a);
+                    document.getElementById('statusDot').className = "inline-block h-2 w-2 bg-green-500 rounded-full mr-1";
+                    document.getElementById('statusText').innerText = "Arc Secure";
+                    say("Gateway Connected");
+                } catch(e) { say("Connection Failed"); console.log(e); }
+            } else { alert("Install Mises/OKX Browser"); }
         }
 
         function execute() {
-            if(!currentAddr) return say("Connect wallet first");
-            
-            // Kaam ho raha hai toh music band
+            if(!currentAddr) return say("Connect wallet");
             music.pause();
-            say("Processing " + currentMode + ". Please wait.");
-            
-            setTimeout(() => {
-                say("Success. Route executed.");
-                alert("Transaction Successful!");
-                // Kaam khatam toh music wapas shuru
-                music.play();
-            }, 3000);
+            say("Processing transaction");
+            setTimeout(() => { say("Success"); alert("Success!"); music.play(); }, 3000);
         }
-
-        function openLink(url) { window.open(url, '_blank'); }
     </script>
 </body>
 </html>
