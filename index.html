@@ -1,11 +1,3 @@
-export function decodeError(err) {
-  if (err.message.includes("insufficient funds")) {
-    return "not enough balance";
-  }
-
-  if (err.message.includes("gas")) {
-    return "gas estimation failed";
-  }
-
-  return "unknown error";
+export function isValidAddress(addr) {
+  return /^0x[a-fA-F0-9]{40}$/.test(addr);
 }
