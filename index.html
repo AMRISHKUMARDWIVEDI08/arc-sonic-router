@@ -3,111 +3,168 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ArcFlow Pro V26</title>
+    <title>ArcFlow Pro V26 - Master Fixed</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        body { background: #0b1120; color: white; font-family: sans-serif; }
-        .glass-panel { background: #111827; border: 1px solid #1f2937; border-radius: 1.5rem; }
-        .nav-btn { background: #1e293b; border: 1px solid #334155; padding: 0.5rem 1.5rem; border-radius: 0.5rem; font-size: 0.75rem; font-weight: 600; }
-        .btn-blue { background: #2563eb; color: white; border: none; }
-        /* Tab Logic Classes */
-        .tab-item { background: #1e293b; color: #94a3b8; padding: 0.6rem 1.2rem; border-radius: 0.5rem; font-size: 0.75rem; font-weight: 700; cursor: pointer; transition: 0.2s; }
+        body { background: #070b14; color: #f8fafc; font-family: 'Inter', sans-serif; overflow-x: hidden; }
+        .glass { background: rgba(15, 23, 42, 0.7); backdrop-filter: blur(16px); border: 1px solid rgba(255, 255, 255, 0.05); border-radius: 20px; }
+        .btn-main { background: #2563eb; color: white; border-radius: 10px; font-weight: 700; transition: 0.3s; }
+        .btn-outline { background: #1e293b; border: 1px solid #334155; border-radius: 8px; font-size: 11px; font-weight: 600; padding: 8px 16px; }
+        .tab-btn { background: #1e293b; color: #94a3b8; padding: 10px 18px; border-radius: 10px; font-size: 11px; font-weight: 700; cursor: pointer; }
         .tab-active { background: #2563eb; color: white; }
+        .grid-card { background: rgba(30, 41, 59, 0.5); border: 1px solid rgba(255, 255, 255, 0.03); border-radius: 12px; padding: 15px; text-align: center; cursor: pointer; transition: 0.2s; }
+        .grid-card:hover { background: rgba(59, 130, 246, 0.1); border-color: rgba(59, 130, 246, 0.3); }
         .hidden-section { display: none; }
     </style>
 </head>
-<body class="p-4">
+<body class="p-4" onclick="initVoice()">
 
-    <div class="flex justify-between items-center mb-6">
+    <div class="flex justify-between items-center mb-6 px-1">
         <div>
-            <h1 class="text-xl font-bold italic">ArcFlow <span class="text-blue-500 font-normal text-xs uppercase">Pro</span></h1>
-            <p class="text-[10px] text-gray-500 uppercase">Universal Multi-Asset Router</p>
+            <h1 class="text-xl font-black italic tracking-tight">ArcFlow <span class="text-blue-500 font-medium text-xs not-italic uppercase">Pro V26</span></h1>
+            <p class="text-[9px] text-slate-500 uppercase tracking-widest mt-0.5">Universal Multi-Asset Router</p>
         </div>
-        <div class="bg-gray-800 p-2 rounded-lg border border-gray-700">
-            <img src="https://via.placeholder.com/32" class="h-6 w-6">
+        <div class="p-2 glass border border-blue-500/20 rounded-xl">
+            <i class="fa-solid fa-braille text-blue-500 text-lg"></i>
         </div>
     </div>
 
-    <div class="glass-panel p-6 mb-6">
-        <div class="flex gap-2 mb-6">
-            <button class="nav-btn btn-blue">Connect</button>
-            <button class="nav-btn">Arc Net</button>
-            <button class="nav-btn">Arb Net</button>
-            <button class="nav-btn text-xs">🔄</button>
+    <div class="glass p-6 mb-6">
+        <div class="flex gap-2 mb-8">
+            <button id="connectBtn" onclick="connect()" class="btn-main px-6 py-2.5 text-xs shadow-lg shadow-blue-600/20">Connect</button>
+            <button class="btn-outline">Arc Net</button>
+            <button class="btn-outline">Arb Net</button>
+            <button class="btn-outline px-3"><i class="fa-solid fa-rotate-right"></i></button>
         </div>
-        <div class="flex justify-between items-start text-[10px] font-bold">
-            <div>
-                <span class="text-red-500">●</span> <span class="text-gray-500">IDLE</span>
+
+        <div class="flex justify-between items-start">
+            <div class="flex items-center gap-2">
+                <span id="dot" class="h-2 w-2 bg-red-500 rounded-full animate-pulse"></span>
+                <span id="status" class="text-[10px] text-slate-500 font-bold uppercase">Idle</span>
             </div>
             <div class="text-right">
-                <p class="text-blue-500 uppercase mb-2">Arc Testnet</p>
-                <p>0.00 <span class="text-gray-500">USDC</span></p>
-                <p>0.00 <span class="text-gray-500">FURC</span></p>
-                <p class="text-yellow-500">0.00 <span class="text-gray-500">USYC</span></p>
-                <p class="text-blue-400 mt-4 uppercase">Arbitrum Sepolia</p>
-                <p>0.00 <span class="text-gray-500">USDC</span></p>
+                <p class="text-[9px] text-blue-500 font-black uppercase mb-3 border-b border-blue-500/10 pb-1">Arc Testnet</p>
+                <p id="balUSDC" class="text-lg font-bold">0.00 <span class="text-[10px] text-slate-500">USDC</span></p>
+                <p class="text-xs font-bold text-slate-400">0.00 <span class="text-[9px] text-slate-600">FURC</span></p>
+                <p class="text-xs font-bold text-yellow-500/80">0.00 <span class="text-[9px] text-slate-600 uppercase">USYC</span></p>
+                
+                <p class="text-[9px] text-purple-400 font-black uppercase mt-5 mb-2 border-b border-purple-500/10 pb-1">Arbitrum Sepolia</p>
+                <p class="text-xs font-bold text-green-400">0.00 <span class="text-[9px] text-slate-600">USDC</span></p>
             </div>
         </div>
     </div>
 
-    <div class="flex gap-2 mb-4">
-        <div id="btn-transfer" onclick="openTab('transfer')" class="tab-item tab-active">Transfer</div>
-        <div id="btn-swap" onclick="openTab('swap')" class="tab-item">Swap</div>
-        <div id="btn-pools" onclick="openTab('pools')" class="tab-item">Pools</div>
-        <div id="btn-bridge" onclick="openTab('bridge')" class="tab-item">Bridge</div>
+    <div class="flex gap-2 mb-4 overflow-x-auto no-scrollbar pb-1">
+        <div id="t-transfer" onclick="openTab('transfer')" class="tab-btn tab-active">Transfer</div>
+        <div id="t-swap" onclick="openTab('swap')" class="tab-btn">Swap</div>
+        <div id="t-pools" onclick="openTab('pools')" class="tab-btn">Pools</div>
+        <div id="t-bridge" onclick="openTab('bridge')" class="tab-btn">Bridge</div>
     </div>
 
-    <div class="flex gap-2 mb-6">
-        <button class="bg-gray-900 border border-gray-800 text-[10px] px-4 py-2 rounded-lg">USYC Vault</button>
-        <button class="bg-gray-900 border border-gray-800 text-[10px] px-4 py-2 rounded-lg">🤖 ArcAI</button>
-        <button class="bg-gray-900 border border-gray-800 text-[10px] px-4 py-2 rounded-lg">Scanner</button>
+    <div class="flex gap-2 mb-8">
+        <button class="btn-outline text-[9px] opacity-60">USYC Vault</button>
+        <button class="btn-outline text-[9px] opacity-60"><i class="fa-solid fa-robot mr-1"></i> ArcAI</button>
+        <button class="btn-outline text-[9px] opacity-60">Scanner</button>
     </div>
 
-    <div class="glass-panel p-6 mb-8">
+    <div class="glass p-6 mb-10">
         <div id="transfer-ui">
-            <p class="text-[10px] font-bold text-gray-500 uppercase mb-4 italic">Send Asset</p>
-            <select class="w-full bg-gray-900 border border-gray-800 p-3 rounded-lg text-sm mb-4">
+            <div class="flex justify-between items-center mb-6">
+                <p class="text-[10px] font-bold text-slate-500 uppercase italic tracking-widest"><i class="fa-solid fa-paper-plane mr-2"></i>Send Asset</p>
+            </div>
+            
+            <select class="w-full bg-slate-900/50 border border-slate-800 p-4 rounded-xl text-sm mb-4 outline-none focus:border-blue-500 transition-colors">
                 <option>USDC (Stablecoin)</option>
+                <option>FURC (Native Token)</option>
             </select>
-            <input type="text" placeholder="Recipient address (0x...)" class="w-full bg-gray-900 border border-gray-800 p-3 rounded-lg text-sm mb-6">
-            <button class="w-full btn-blue py-4 rounded-xl font-bold uppercase text-xs">Confirm Send</button>
+            
+            <input type="text" placeholder="Recipient address (0x...)" class="w-full bg-slate-900/50 border border-slate-800 p-4 rounded-xl text-sm mb-4 font-mono">
+            
+            <div class="flex justify-between items-center mb-6">
+                <span class="text-[9px] font-bold text-slate-600 uppercase">Quick Amount:</span>
+                <div class="flex gap-2">
+                    <button class="bg-slate-800 px-3 py-1 rounded text-[10px] font-bold">10</button>
+                    <button class="bg-slate-800 px-3 py-1 rounded text-[10px] font-bold">50</button>
+                    <button class="bg-blue-900/30 text-blue-400 px-3 py-1 rounded text-[10px] font-bold">MAX</button>
+                </div>
+            </div>
+
+            <input type="number" placeholder="0.00" class="w-full bg-slate-900/80 border border-slate-800 p-6 rounded-2xl text-3xl font-black mb-8 outline-none text-center">
+            
+            <button onclick="execute()" class="w-full btn-main py-5 text-xs uppercase tracking-[0.2em] shadow-xl shadow-blue-900/20">Confirm Send</button>
         </div>
 
-        <div id="swap-ui" class="hidden-section text-center py-10">
-            <p class="text-blue-400 font-bold">Swap Engine Ready</p>
-        </div>
-
-        <div id="bridge-ui" class="hidden-section text-center py-10">
-            <p class="text-blue-400 font-bold">Bridge Route Active</p>
+        <div id="swap-ui" class="hidden-section text-center py-10 opacity-40">
+            <i class="fa-solid fa-shuffle text-3xl mb-4"></i>
+            <p class="text-xs uppercase font-bold tracking-widest">Swap Engine Initializing...</p>
         </div>
     </div>
 
-    <div class="space-y-6">
-        <h3 class="text-[10px] font-bold text-blue-500 uppercase italic">Arc Network</h3>
-        <div class="grid grid-cols-3 gap-2">
-            <div class="bg-gray-900 p-3 rounded-lg text-[9px] text-center font-bold">WEBSITE</div>
-            <div class="bg-gray-900 p-3 rounded-lg text-[9px] text-center font-bold">DOCS</div>
-            <div class="bg-gray-900 p-3 rounded-lg text-[9px] text-center font-bold">HOUSE</div>
+    <div class="space-y-10 mb-20 px-1">
+        <div>
+            <h3 class="text-[10px] font-black text-blue-500 uppercase tracking-[0.3em] mb-4 italic">Arc Network</h3>
+            <div class="grid grid-cols-3 gap-3">
+                <div class="grid-card"><i class="fa-solid fa-link block mb-2 text-blue-400"></i>Website</div>
+                <div class="grid-card"><i class="fa-solid fa-book block mb-2 text-slate-400"></i>Docs</div>
+                <div class="grid-card"><i class="fa-solid fa-users block mb-2 text-slate-400"></i>House</div>
+            </div>
+            <div class="grid grid-cols-2 gap-3 mt-3">
+                <div class="grid-card"><i class="fa-brands fa-x-twitter block mb-2"></i>Twitter</div>
+                <div class="grid-card"><i class="fa-brands fa-discord block mb-2"></i>Discord</div>
+            </div>
+        </div>
+
+        <div>
+            <h3 class="text-[10px] font-black text-green-500 uppercase tracking-[0.3em] mb-4 italic">Circle Infra</h3>
+            <div class="grid grid-cols-3 gap-3">
+                <div class="grid-card text-green-400/80"><i class="fa-solid fa-building-columns block mb-2"></i>Circle</div>
+                <div class="grid-card text-green-400/80"><i class="fa-solid fa-code block mb-2"></i>Devs</div>
+                <div class="grid-card text-green-500"><i class="fa-solid fa-faucet-drip block mb-2"></i>Faucet</div>
+            </div>
         </div>
     </div>
 
+    <div class="flex justify-center gap-8 py-10 border-t border-white/5 opacity-40">
+        <i class="fa-brands fa-x-twitter text-lg"></i>
+        <i class="fa-brands fa-github text-lg"></i>
+        <i class="fa-brands fa-youtube text-lg"></i>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/5.7.2/ethers.umd.min.js"></script>
     <script>
-        function openTab(tabName) {
-            // All tabs reset
-            document.querySelectorAll('.tab-item').forEach(el => el.classList.remove('tab-active'));
+        let voiceReady = false;
+        function initVoice() { if(!voiceReady) { say("System Gateway 26 Online"); voiceReady = true; } }
+        function say(t) { const s = new SpeechSynthesisUtterance(t); window.speechSynthesis.speak(s); }
+
+        function openTab(name) {
+            document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('tab-active'));
+            document.getElementById('t-' + name).classList.add('tab-active');
+            
             document.getElementById('transfer-ui').classList.add('hidden-section');
             document.getElementById('swap-ui').classList.add('hidden-section');
-            document.getElementById('bridge-ui').classList.add('hidden-section');
-
-            // Set Active Tab
-            document.getElementById('btn-' + tabName).classList.add('tab-active');
             
-            // Show UI
-            if(tabName === 'transfer') document.getElementById('transfer-ui').classList.remove('hidden-section');
-            if(tabName === 'swap') document.getElementById('swap-ui').classList.remove('hidden-section');
-            if(tabName === 'bridge') document.getElementById('bridge-ui').classList.remove('hidden-section');
+            if(name === 'transfer') document.getElementById('transfer-ui').classList.remove('hidden-section');
+            if(name === 'swap') document.getElementById('swap-ui').classList.remove('hidden-section');
+            
+            say("Switching to " + name);
+        }
+
+        async function connect() {
+            if(window.ethereum) {
+                const p = new ethers.providers.Web3Provider(window.ethereum);
+                await p.send("eth_requestAccounts", []);
+                const signer = p.getSigner();
+                const addr = await signer.getAddress();
+                const bal = await p.getBalance(addr);
+                document.getElementById('balUSDC').innerText = parseFloat(ethers.utils.formatEther(bal)).toFixed(4) + " USDC";
+                document.getElementById('connectBtn').innerText = addr.substring(0,6)+"...";
+                document.getElementById('dot').className = "h-2 w-2 bg-green-500 rounded-full animate-pulse";
+                document.getElementById('status').innerText = "Connected";
+                say("Wallet Authorized");
+            }
         }
     </script>
 </body>
     </html>
-        
+    
