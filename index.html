@@ -3,70 +3,105 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sonic Router Pro</title>
+    <title>SonicFlow Pro V1</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/5.7.2/ethers.umd.min.js"></script>
     <style>
-        body { background: #000; color: white; font-family: sans-serif; }
-        .glass-card { background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 32px; }
-        .btn-green { background: #4ade80; color: black; font-weight: 900; border-radius: 16px; box-shadow: 0 0 20px rgba(74, 222, 128, 0.4); }
+        body { background: radial-gradient(circle at top, #1e293b, #000); color: white; font-family: 'Inter', sans-serif; }
+        .glass { background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(15px); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 24px; }
+        .neon-text { text-shadow: 0 0 10px rgba(74, 222, 128, 0.5); }
+        .status-dot { width: 8px; height: 8px; border-radius: 50%; background: #4ade80; box-shadow: 0 0 10px #4ade80; }
     </style>
 </head>
-<body class="p-6">
-    <div class="flex justify-between items-center mb-12">
-        <h1 class="text-2xl font-black italic tracking-tighter text-green-400">SONIC<span class="text-white">FLOW</span></h1>
-        <button id="connectBtn" onclick="connectWallet()" class="bg-white/10 px-4 py-2 rounded-xl text-[10px] font-bold border border-white/20">CONNECT WALLET</button>
+<body class="p-4 min-h-screen">
+
+    <div class="flex justify-between items-center mb-8 px-2">
+        <div>
+            <h1 class="text-xl font-black tracking-tighter text-green-400 italic">SONIC<span class="text-white">FLOW PRO</span></h1>
+            <p class="text-[8px] text-slate-500 uppercase font-bold tracking-[0.2em]">Universal Multi-Asset Router</p>
+        </div>
+        <button id="connectBtn" onclick="connectWallet()" class="glass px-4 py-2 text-[10px] font-bold border-green-500/30 text-green-400">CONNECT</button>
     </div>
 
-    <div class="glass-card p-8 max-w-md mx-auto">
-        <div class="flex gap-6 mb-10 text-[10px] font-black uppercase text-slate-500">
-            <span class="text-green-400 border-b-2 border-green-400 pb-1">Swap</span>
-            <span>Bridge</span>
-        </div>
-
-        <div class="bg-white/5 rounded-2xl p-5 mb-2 border border-white/5">
-            <div class="flex justify-between text-[10px] text-slate-500 font-bold mb-4 uppercase">
-                <span>From Arc Network</span>
-                <span id="userBalance">Balance: 0.00</span>
+    <div class="glass p-6 mb-6 shadow-2xl">
+        <div class="flex justify-between items-center mb-6">
+            <div class="flex items-center gap-2">
+                <div class="status-dot animate-pulse"></div>
+                <span class="text-[10px] font-bold text-slate-400 uppercase">System Active</span>
             </div>
-            <div class="flex justify-between items-center">
-                <input type="number" placeholder="0.0" class="bg-transparent text-3xl font-bold outline-none w-1/2">
-                <span class="bg-white/10 px-3 py-2 rounded-xl text-sm font-bold border border-white/10">USDC</span>
+            <div class="text-right text-[10px]">
+                <p class="text-slate-500 font-bold uppercase">Arc Testnet</p>
+                <p id="balanceDisplay" class="text-green-400 font-mono">0.00 USDC</p>
             </div>
         </div>
 
-        <button onclick="executeRoute()" class="w-full btn-green py-5 mt-8 text-lg uppercase tracking-widest active:scale-95 transition">
-            Execute Sonic Route
+        <div class="flex gap-4 mb-8 overflow-x-auto no-scrollbar">
+            <button class="bg-blue-600 px-4 py-2 rounded-xl text-[10px] font-bold">Transfer</button>
+            <button class="glass px-4 py-2 rounded-xl text-[10px] font-bold text-slate-400">Swap</button>
+            <button class="glass px-4 py-2 rounded-xl text-[10px] font-bold text-slate-400">Bridge</button>
+        </div>
+
+        <div class="bg-black/40 border border-white/5 rounded-2xl p-4 mb-6">
+            <label class="text-[9px] font-bold text-slate-500 uppercase block mb-3">Send Asset</label>
+            <select class="bg-transparent text-sm font-bold w-full outline-none border-b border-white/10 pb-2 mb-4">
+                <option class="bg-black text-white">USDC (Stablecoin)</option>
+            </select>
+            <input type="text" placeholder="Recipient address (0x...)" class="bg-transparent text-xs w-full outline-none border-b border-white/10 pb-2 mb-4">
+            <input type="number" placeholder="0.00" class="bg-transparent text-2xl font-black w-full outline-none text-center">
+        </div>
+
+        <button onclick="executeAction()" class="w-full bg-blue-600 hover:bg-blue-500 text-white py-4 rounded-2xl font-black text-sm shadow-xl transition-all active:scale-95 uppercase tracking-widest">
+            Confirm Send
         </button>
     </div>
 
+    <div class="glass p-5 mb-10">
+        <h3 class="text-[9px] font-black text-slate-500 uppercase tracking-widest mb-4">Ecosystem & Socials</h3>
+        <div class="grid grid-cols-2 gap-3">
+            <a href="#" class="bg-white/5 p-3 rounded-xl border border-white/5 text-center">
+                <p class="text-[8px] font-bold text-slate-400">WEBSITE</p>
+            </a>
+            <a href="#" class="bg-white/5 p-3 rounded-xl border border-white/5 text-center">
+                <p class="text-[8px] font-bold text-slate-400">DOCS</p>
+            </a>
+        </div>
+    </div>
+
     <script>
-        let provider;
-        let signer;
+        // Audio Machine
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        function playSound(freq) {
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.connect(gain); gain.connect(audioCtx.destination);
+            osc.type = 'sine'; osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+            gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.5);
+            osc.start(); osc.stop(audioCtx.currentTime + 0.5);
+        }
 
         async function connectWallet() {
             if (window.ethereum) {
-                try {
-                    provider = new ethers.providers.Web3Provider(window.ethereum);
-                    await provider.send("eth_requestAccounts", []);
-                    signer = provider.getSigner();
-                    const address = await signer.getAddress();
-                    document.getElementById('connectBtn').innerText = address.substring(0,6) + "..." + address.substring(38);
-                    alert("Wallet Connected, Amrish!");
-                } catch (error) {
-                    console.error("User rejected");
-                }
-            } else {
-                alert("Please open this in Mises Browser or install a Wallet!");
+                const provider = new ethers.providers.Web3Provider(window.ethereum);
+                await provider.send("eth_requestAccounts", []);
+                const signer = provider.getSigner();
+                const address = await signer.getAddress();
+                document.getElementById('connectBtn').innerText = address.substring(0,6)+"..."+address.substring(38);
+                playSound(880); // Success Sound
             }
         }
 
-        function executeRoute() {
-            alert("Route processing on Arc Network...");
+        function executeAction() {
+            playSound(440); // Click Sound
+            alert("Action Processed, Amrish!");
         }
+
+        // Startup Sound
+        window.onclick = () => { if (audioCtx.state === 'suspended') audioCtx.resume(); };
     </script>
 </body>
-</html>
+        </html>
+                
 
 
     
