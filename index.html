@@ -14,7 +14,6 @@
         .hidden-section { display: none; }
         .action-btn { background: #2563eb; color: white; border-radius: 0.75rem; font-weight: 800; transition: 0.3s; }
         .action-btn:active { transform: scale(0.98); }
-        .grid-card { background: #111827; border: 1px solid #1f2937; border-radius: 0.75rem; padding: 1rem; text-align: center; cursor: pointer; }
     </style>
 </head>
 <body class="p-4 pb-20">
@@ -22,7 +21,7 @@
     <div class="flex justify-between items-center mb-6">
         <div>
             <h1 class="text-xl font-black italic">Arc <span class="text-blue-500 font-bold text-[10px] not-italic uppercase">Settlement Engine</span></h1>
-            <p class="text-[9px] text-slate-500 uppercase tracking-widest">Universal Multi-Asset Router</p>
+            <p class="text-[9px] text-slate-500 uppercase tracking-widest">Institutional Multi-Asset Router</p>
         </div>
         <div class="flex items-center gap-3">
             <i class="fa-solid fa-gear text-slate-600"></i>
@@ -37,7 +36,6 @@
             <button onclick="handleConnect()" id="connectBtn" class="bg-blue-700 px-6 py-2 rounded-lg text-[10px] font-bold">Connect Wallet</button>
             <div class="flex gap-2">
                 <button class="bg-slate-800 px-4 py-2 rounded-lg text-[10px] font-bold">Arc Net</button>
-                <button class="bg-slate-800 px-4 py-2 rounded-lg text-[10px] font-bold">Arb Net</button>
                 <button class="bg-slate-800 px-3 py-2 rounded-lg" onclick="location.reload()"><i class="fa-solid fa-rotate-right text-[10px]"></i></button>
             </div>
         </div>
@@ -47,5 +45,32 @@
                 <span id="statusDot" class="h-2 w-2 bg-red-500 rounded-full inline-block animate-pulse"></span>
                 <span id="statusText" class="text-[10px] text-slate-500 font-bold uppercase ml-1 italic">Engine Idle</span>
             </div>
-            <div class="text-
-                                                                                                            
+            <div class="text-right">
+                <p class="text-[9px] text-blue-500 font-black uppercase mb-2">Arc Testnet</p>
+                <p class="text-lg font-black tracking-tight">0.00 <span class="text-[10px] text-slate-500">USDC</span></p>
+            </div>
+        </div>
+    </div>
+
+    <div class="glass-panel p-6 mb-10">
+        <div id="ui-transfer">
+            <p class="text-[10px] font-bold text-slate-500 uppercase italic mb-6 tracking-widest">Execute Settlement</p>
+            <input type="text" placeholder="Recipient address (0x...)" class="w-full bg-slate-900 border border-slate-800 p-4 rounded-xl text-sm mb-4 font-mono">
+            <input type="number" placeholder="0.00" class="w-full bg-slate-950 border border-slate-800 p-6 rounded-2xl text-4xl font-black mb-8 text-center outline-none">
+            <button onclick="executeAction()" class="w-full action-btn py-5 text-[11px] uppercase tracking-[0.3em]">Confirm Settlement</button>
+        </div>
+    </div>
+
+    <script>
+        function handleConnect() {
+            document.getElementById('statusDot').className = "h-2 w-2 bg-green-500 rounded-full inline-block";
+            document.getElementById('statusText').innerText = "Engine Active";
+            document.getElementById('connectBtn').innerText = "Connected";
+        }
+        function executeAction() {
+            alert("Settlement in Progress...");
+            setTimeout(() => { alert("Success!"); }, 2000);
+        }
+    </script>
+</body>
+</html>
