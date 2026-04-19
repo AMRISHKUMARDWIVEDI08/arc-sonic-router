@@ -3,14 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Arc Settlement Engine | Institutional Terminal</title>
+    <title>Arc Settlement Engine | Live Terminal</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/5.7.2/ethers.umd.min.js"></script>
     <style>
         body { background-color: #020617; color: #f8fafc; font-family: 'Inter', sans-serif; }
         .glass-card { background: rgba(15, 23, 42, 0.9); border: 1px solid rgba(59, 130, 246, 0.15); border-radius: 1.25rem; }
-        .tab-btn { padding: 10px; font-size: 10px; font-weight: 800; color: #64748b; border-bottom: 2px solid transparent; transition: 0.3s; cursor: pointer; }
+        .tab-btn { padding: 12px; font-size: 10px; font-weight: 800; color: #64748b; border-bottom: 2px solid transparent; cursor: pointer; transition: 0.3s; }
         .tab-active { color: #3b82f6; border-bottom: 2px solid #3b82f6; background: rgba(59, 130, 246, 0.05); }
         .action-btn { background: linear-gradient(135deg, #2563eb, #1d4ed8); transition: all 0.3s; cursor: pointer; }
         .hidden-section { display: none; }
@@ -21,42 +21,23 @@
 <body class="p-4 max-w-lg mx-auto pb-24">
 
     <div class="flex justify-between items-center mb-6">
-        <div>
-            <h1 class="text-2xl font-black tracking-tighter text-white uppercase">Arc <span class="text-blue-500 italic">Engine</span></h1>
-            <p class="text-[9px] text-slate-500 font-bold tracking-[0.2em] uppercase">Settlement Terminal v4.0</p>
-        </div>
-        <button onclick="connectWallet()" id="walletBtn" class="bg-blue-600/20 border border-blue-500/50 px-4 py-2 rounded-xl text-[10px] font-black text-blue-400">
-            <i class="fa-solid fa-wallet mr-2"></i>CONNECT WALLET
-        </button>
+        <h1 class="text-2xl font-black text-white">ARC <span class="text-blue-500 italic">ENGINE</span></h1>
+        <button onclick="connectWallet()" id="walletBtn" class="bg-blue-600/20 border border-blue-500/50 px-4 py-2 rounded-xl text-[10px] font-black text-blue-400">CONNECT WALLET</button>
     </div>
 
-    <div class="grid grid-cols-2 gap-3 mb-4">
-        <div class="glass-card p-3 border-l-4 border-green-500 flex items-center gap-2">
-            <i class="fa-solid fa-circle-check text-green-500 text-[10px]"></i>
-            <span class="text-[9px] font-black uppercase text-slate-300">Reserve: 100%</span>
-        </div>
-        <div class="glass-card p-3 border-l-4 border-blue-500 flex items-center gap-2">
-            <i class="fa-solid fa-gas-pump text-blue-500 text-[10px]"></i>
-            <span class="text-[9px] font-black uppercase text-blue-400">Gas: USDC</span>
-        </div>
+    <div class="glass-card p-6 mb-6 text-center border-blue-500/30">
+        <p class="text-[10px] text-slate-500 font-bold uppercase tracking-[0.2em]">Available Liquidity</p>
+        <h2 id="balanceDisp" class="text-5xl font-black my-2">0.00 <span class="text-xl text-slate-600 italic font-light">USDC</span></h2>
+        <p id="addrShort" class="text-[9px] text-slate-600 font-mono tracking-tighter italic">Connect to view address</p>
     </div>
 
-    <div class="glass-card p-5 mb-6 border-blue-500/30 overflow-hidden relative">
+    <div class="glass-card p-4 mb-6 relative overflow-hidden bg-slate-900/40">
         <div class="flex justify-between items-center px-4 relative z-10">
-            <div class="text-center">
-                <div class="w-10 h-10 rounded-lg bg-slate-800 flex items-center justify-center border border-slate-700 shadow-xl"><i class="fa-brands fa-ethereum text-blue-400 text-lg"></i></div>
-                <p class="text-[7px] font-bold mt-1 text-slate-500 uppercase">Source</p>
-            </div>
-            <div class="flex-1 h-[2px] bg-slate-800 mx-2 relative overflow-hidden"><div class="animate-flow"></div></div>
-            <div class="text-center">
-                <div class="w-12 h-12 rounded-full bg-blue-600 flex items-center justify-center border-2 border-blue-400 shadow-lg shadow-blue-500/20"><i class="fa-solid fa-a text-white text-xl"></i></div>
-                <p class="text-[9px] font-black text-blue-400 italic mt-1 uppercase">Arc Node</p>
-            </div>
-            <div class="flex-1 h-[2px] bg-slate-800 mx-2"></div>
-            <div class="text-center">
-                <div class="w-10 h-10 rounded-lg bg-slate-800 flex items-center justify-center border border-slate-700"><i class="fa-solid fa-vault text-green-400 text-lg"></i></div>
-                <p class="text-[7px] font-bold mt-1 text-slate-500 uppercase">Settle</p>
-            </div>
+            <div class="text-center"><i class="fa-brands fa-ethereum text-blue-400"></i><p class="text-[7px] mt-1 uppercase">Source</p></div>
+            <div class="flex-1 h-[1px] bg-slate-800 mx-4 relative overflow-hidden"><div class="animate-flow"></div></div>
+            <div class="w-10 h-10 rounded-full bg-blue-600 flex items-center justify-center border border-blue-400 shadow-lg shadow-blue-500/30"><i class="fa-solid fa-a text-white text-sm"></i></div>
+            <div class="flex-1 h-[1px] bg-slate-800 mx-4"></div>
+            <div class="text-center"><i class="fa-solid fa-vault text-green-400"></i><p class="text-[7px] mt-1 uppercase">Settle</p></div>
         </div>
     </div>
 
@@ -67,19 +48,37 @@
     </div>
 
     <div class="glass-card p-6 min-h-[300px]">
+        
         <div id="section-transfer" class="space-y-4">
-            <input type="text" id="t-addr" placeholder="Recipient Address (0x...)" class="w-full bg-slate-950 border border-slate-800 p-4 rounded-xl text-xs outline-none focus:border-blue-500 font-mono">
-            <input type="number" id="t-amt" placeholder="Amount USDC" class="w-full bg-slate-950 border border-slate-800 p-4 rounded-xl text-xs font-bold outline-none">
-            <button onclick="executeEngine('Transfer')" class="w-full action-btn py-5 rounded-xl text-[11px] font-black uppercase tracking-[0.3em] text-white">Execute Transfer</button>
+            <p class="text-[9px] font-black text-blue-400 uppercase italic mb-2 tracking-widest italic">Direct Asset Transfer</p>
+            <input type="text" id="destAddr" placeholder="Recipient Address (0x...)" class="w-full bg-slate-950 border border-slate-800 p-4 rounded-xl text-xs outline-none focus:border-blue-500 font-mono">
+            <input type="number" id="sendAmt" placeholder="Amount to Send" class="w-full bg-slate-950 border border-slate-800 p-4 rounded-xl text-xs font-bold outline-none">
+            <button onclick="executeAction('Transfer')" class="w-full action-btn py-5 rounded-xl text-[11px] font-black uppercase tracking-[0.3em] text-white">Execute Transfer</button>
         </div>
-        <div id="section-swap" class="hidden-section space-y-4">
-            <div class="bg-slate-950 p-4 rounded-xl border border-slate-800 text-xs font-bold text-center">USDC <i class="fa-solid fa-arrow-right mx-2 text-blue-500"></i> USYC</div>
-            <button onclick="executeEngine('Swap')" class="w-full action-btn py-5 rounded-xl text-[11px] font-black uppercase tracking-[0.3em] text-white">Execute Swap</button>
+
+        <div id="section-swap" class="hidden-section space-y-4 text-center">
+            <p class="text-[9px] font-black text-orange-400 uppercase italic mb-2 tracking-widest italic">Liquidity Swap Engine</p>
+            <div class="bg-slate-950 p-4 rounded-xl border border-slate-800 flex justify-between items-center">
+                <span class="text-xs font-bold uppercase">USDC</span>
+                <input type="number" placeholder="0.00" class="bg-transparent text-right outline-none text-xs font-bold">
+            </div>
+            <div class="text-blue-500"><i class="fa-solid fa-circle-arrow-down text-xl"></i></div>
+            <div class="bg-slate-950 p-4 rounded-xl border border-slate-800 flex justify-between items-center">
+                <span class="text-xs font-bold uppercase text-blue-400">USYC</span>
+                <span class="text-xs font-bold text-slate-700">0.00</span>
+            </div>
+            <button onclick="executeAction('Swap')" class="w-full action-btn py-5 rounded-xl text-[11px] font-black uppercase tracking-[0.3em] text-white">Execute Instant Swap</button>
         </div>
-        <div id="section-bridge" class="hidden-section space-y-4 text-center">
-            <p class="text-xs font-bold">Arbitrum <i class="fa-solid fa-bridge mx-2"></i> Arc Net</p>
-            <button onclick="executeEngine('Bridge')" class="w-full action-btn py-5 rounded-xl text-[11px] font-black uppercase tracking-[0.3em] text-white">Initiate Bridge</button>
+
+        <div id="section-bridge" class="hidden-section space-y-4">
+            <p class="text-[9px] font-black text-green-400 uppercase italic mb-2 tracking-widest italic">Cross-Chain Settlement</p>
+            <div class="grid grid-cols-2 gap-2 text-center">
+                <div class="bg-slate-950 p-4 rounded-xl border border-slate-800"><p class="text-[8px] text-slate-500 uppercase font-bold">From</p><p class="text-[10px] font-black">Arbitrum</p></div>
+                <div class="bg-slate-950 p-4 rounded-xl border border-blue-900 shadow-inner"><p class="text-[8px] text-blue-500 uppercase font-bold">To</p><p class="text-[10px] font-black text-blue-400">Arc Network</p></div>
+            </div>
+            <button onclick="executeAction('Bridge')" class="w-full action-btn py-5 rounded-xl text-[11px] font-black uppercase tracking-[0.3em] text-white">Initiate Secure Bridge</button>
         </div>
+
     </div>
 
     <div id="status-box" class="hidden mt-6 glass-card p-4 border-blue-500/40 text-center">
@@ -90,6 +89,25 @@
         const ARC_RPC = "https://arc-testnet.rpc.caldera.xyz/http";
         const ARC_CHAIN_ID = "0x4cef52";
 
+        async function connectWallet() {
+            if (window.ethereum) {
+                try {
+                    const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
+                    const provider = new ethers.providers.Web3Provider(window.ethereum);
+                    const balance = await provider.getBalance(accounts[0]);
+                    
+                    document.getElementById('walletBtn').innerText = accounts[0].substring(0, 8) + "...";
+                    document.getElementById('addrShort').innerText = accounts[0];
+                    document.getElementById('balanceDisp').innerHTML = `${ethers.utils.formatEther(balance).substring(0, 6)} <span class="text-xl text-slate-600 italic">USDC</span>`;
+                    
+                    await window.ethereum.request({
+                        method: 'wallet_addEthereumChain',
+                        params: [{ chainId: ARC_CHAIN_ID, chainName: 'Arc Testnet', nativeCurrency: { name: 'USDC', symbol: 'USDC', decimals: 18 }, rpcUrls: [ARC_RPC] }]
+                    });
+                } catch (e) { alert("Authorization Denied"); }
+            } else { alert("Please use Mises Browser for Web3"); }
+        }
+
         function showTab(id) {
             document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('tab-active'));
             document.getElementById('t-'+id).classList.add('tab-active');
@@ -97,26 +115,7 @@
             document.getElementById('section-'+id).classList.remove('hidden-section');
         }
 
-        async function connectWallet() {
-            if (window.ethereum) {
-                try {
-                    const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
-                    document.getElementById('walletBtn').innerHTML = "<span class='text-green-500'>●</span> " + accounts[0].substring(0,6) + "...";
-                    // Pawan Sir's Network Fix
-                    await window.ethereum.request({
-                        method: 'wallet_addEthereumChain',
-                        params: [{
-                            chainId: ARC_CHAIN_ID,
-                            chainName: 'Arc Testnet',
-                            nativeCurrency: { name: 'USDC', symbol: 'USDC', decimals: 18 },
-                            rpcUrls: [ARC_RPC]
-                        }]
-                    });
-                } catch (e) { alert("Connect Error"); }
-            } else { alert("Use Mises Browser"); }
-        }
-
-        function executeEngine(type) {
+        function executeAction(type) {
             const statusBox = document.getElementById('status-box');
             const timer = document.getElementById('timer');
             statusBox.classList.remove('hidden');
@@ -124,13 +123,14 @@
             let clock = setInterval(() => {
                 timer.innerText = ((Date.now() - start) / 1000).toFixed(3) + "s";
             }, 50);
-            alert(type + " Route Initiated via Arc Node...");
+
+            alert(`Arc Node: Initiating Native ${type} Route...`);
             setTimeout(() => {
                 clearInterval(clock);
-                alert("✅ SUCCESS: " + type + " Finalized on Arc Testnet");
-            }, 2500);
+                alert(`✅ ${type} Finalized Successfully on Arc Testnet!`);
+            }, 2000);
         }
     </script>
 </body>
-                    </html>
+        </html>
             
