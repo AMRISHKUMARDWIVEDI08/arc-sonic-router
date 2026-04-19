@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ArcFlow Pro V26</title>
+    <title>Arc Settlement Engine | Institutional Router</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
@@ -21,7 +21,7 @@
 
     <div class="flex justify-between items-center mb-6">
         <div>
-            <h1 class="text-xl font-black italic">ArcFlow <span class="text-blue-500 font-bold text-[10px] not-italic uppercase">Pro V26</span></h1>
+            <h1 class="text-xl font-black italic">Arc <span class="text-blue-500 font-bold text-[10px] not-italic uppercase">Settlement Engine</span></h1>
             <p class="text-[9px] text-slate-500 uppercase tracking-widest">Universal Multi-Asset Router</p>
         </div>
         <div class="flex items-center gap-3">
@@ -34,7 +34,7 @@
 
     <div class="glass-panel p-6 mb-6">
         <div class="flex justify-between items-center mb-8">
-            <button onclick="handleConnect()" id="connectBtn" class="bg-blue-700 px-6 py-2 rounded-lg text-[10px] font-bold">Connect</button>
+            <button onclick="handleConnect()" id="connectBtn" class="bg-blue-700 px-6 py-2 rounded-lg text-[10px] font-bold">Connect Wallet</button>
             <div class="flex gap-2">
                 <button class="bg-slate-800 px-4 py-2 rounded-lg text-[10px] font-bold">Arc Net</button>
                 <button class="bg-slate-800 px-4 py-2 rounded-lg text-[10px] font-bold">Arb Net</button>
@@ -45,129 +45,7 @@
         <div class="flex justify-between items-start">
             <div>
                 <span id="statusDot" class="h-2 w-2 bg-red-500 rounded-full inline-block animate-pulse"></span>
-                <span id="statusText" class="text-[10px] text-slate-500 font-bold uppercase ml-1 italic">Idle</span>
+                <span id="statusText" class="text-[10px] text-slate-500 font-bold uppercase ml-1 italic">Engine Idle</span>
             </div>
-            <div class="text-right">
-                <p class="text-[9px] text-blue-500 font-black uppercase mb-2">Arc Testnet</p>
-                <p class="text-lg font-black tracking-tight">0.00 <span class="text-[10px] text-slate-500">USDC</span></p>
-                <p class="text-xs font-bold text-slate-500">0.00 <span class="text-[9px]">FURC</span></p>
-                <p class="text-xs font-bold text-yellow-500/80">0.00 <span class="text-[9px]">USYC</span></p>
-                <p class="text-xs font-bold text-blue-400 mt-4">0.00 <span class="text-[9px] text-slate-600">USDC (ARB)</span></p>
-            </div>
-        </div>
-    </div>
-
-    <div class="flex gap-6 mb-6 px-2 border-b border-slate-800">
-        <div id="tab-transfer" onclick="switchTab('transfer')" class="tab-item tab-active">TRANSFER</div>
-        <div id="tab-swap" onclick="switchTab('swap')" class="tab-item">SWAP</div>
-        <div id="tab-pools" onclick="switchTab('pools')" class="tab-item">POOLS</div>
-        <div id="tab-bridge" onclick="switchTab('bridge')" class="tab-item">BRIDGE</div>
-    </div>
-
-    <div class="glass-panel p-6 mb-10">
-        <div id="ui-transfer">
-            <p class="text-[10px] font-bold text-slate-500 uppercase italic mb-6 tracking-widest"><i class="fa-solid fa-paper-plane mr-2"></i>Send Asset</p>
-            <select class="w-full bg-slate-900 border border-slate-800 p-4 rounded-xl text-sm mb-4 outline-none"><option>USDC (Stablecoin)</option></select>
-            <input type="text" placeholder="Recipient address (0x...)" class="w-full bg-slate-900 border border-slate-800 p-4 rounded-xl text-sm mb-4 font-mono">
-            
-            <div class="flex justify-between items-center mb-6">
-                <span class="text-[9px] font-bold text-slate-600 uppercase">Quick Select:</span>
-                <div class="flex gap-2">
-                    <button class="bg-slate-800 px-3 py-1 rounded text-[10px] font-bold">10</button>
-                    <button class="bg-slate-800 px-3 py-1 rounded text-[10px] font-bold">50</button>
-                    <button class="bg-blue-900/30 text-blue-400 px-3 py-1 rounded text-[10px] font-bold">MAX</button>
-                </div>
-            </div>
-
-            <input type="number" placeholder="0.00" class="w-full bg-slate-950 border border-slate-800 p-6 rounded-2xl text-4xl font-black mb-8 text-center outline-none">
-            <button onclick="executeAction()" class="w-full action-btn py-5 text-[11px] uppercase tracking-[0.3em]">Confirm Send</button>
-        </div>
-
-        <div id="ui-swap" class="hidden-section text-center py-20">
-            <i class="fa-solid fa-shuffle text-4xl text-blue-500 mb-4 opacity-40"></i>
-            <p class="text-xs font-bold text-slate-500 uppercase tracking-widest">Swap Engine Ready</p>
-        </div>
-    </div>
-
-    <div class="space-y-10 mb-20">
-        <div>
-            <h3 class="text-[10px] font-black text-blue-500 uppercase mb-4 italic tracking-widest">Ecosystem & Socials</h3>
-            <div class="grid grid-cols-3 gap-3">
-                <div class="grid-card"><i class="fa-solid fa-link block mb-2 text-blue-400"></i><span class="text-[9px]">Website</span></div>
-                <div class="grid-card"><i class="fa-solid fa-book block mb-2 text-slate-400"></i><span class="text-[9px]">Docs</span></div>
-                <div class="grid-card"><i class="fa-solid fa-house block mb-2 text-slate-400"></i><span class="text-[9px]">House</span></div>
-            </div>
-            <div class="grid grid-cols-2 gap-3 mt-3">
-                <div class="grid-card"><i class="fa-brands fa-x-twitter block mb-2"></i><span class="text-[9px]">Twitter</span></div>
-                <div class="grid-card"><i class="fa-brands fa-discord block mb-2"></i><span class="text-[9px]">Discord</span></div>
-            </div>
-        </div>
-
-        <div class="glass-panel p-6">
-            <h3 class="text-[10px] font-black text-blue-400 uppercase mb-6 italic tracking-widest text-center"><i class="fa-solid fa-envelope mr-2"></i>Support & Feedback</h3>
-            <input type="text" placeholder="Your Name (Optional)" class="w-full bg-slate-900 border border-slate-800 p-4 rounded-xl text-sm mb-4 outline-none">
-            <textarea placeholder="Report an issue or suggest a feature..." class="w-full bg-slate-900 border border-slate-800 p-4 rounded-xl text-sm mb-6 h-24 outline-none"></textarea>
-            <button class="w-full action-btn py-4 text-[10px] uppercase tracking-widest">Submit Feedback</button>
-        </div>
-    </div>
-
-    <audio id="bgMusic" loop><source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-15.mp3" type="audio/mpeg"></audio>
-    <audio id="beep"><source src="https://assets.mixkit.co/active_storage/sfx/2571/2571-preview.mp3" type="audio/mpeg"></audio>
-
-    <script>
-        const music = document.getElementById('bgMusic');
-        const beep = document.getElementById('beep');
-        let musicActive = false;
-
-        // Sound Logic
-        function playBeep() { beep.currentTime = 0; beep.play(); }
-
-        document.body.addEventListener('click', () => {
-            if(!musicActive) {
-                music.volume = 0.15;
-                music.play();
-                musicActive = true;
-                const talk = new SpeechSynthesisUtterance("Arc Flow Gateway Online");
-                window.speechSynthesis.speak(talk);
-            }
-        });
-
-        // Tab Switching Logic
-        function switchTab(id) {
-            playBeep();
-            document.querySelectorAll('.tab-item').forEach(t => t.classList.remove('tab-active'));
-            document.getElementById('tab-' + id).classList.add('tab-active');
-            
-            document.getElementById('ui-transfer').classList.add('hidden-section');
-            document.getElementById('ui-swap').classList.add('hidden-section');
-            
-            if(id === 'transfer') document.getElementById('ui-transfer').classList.remove('hidden-section');
-            if(id === 'swap') document.getElementById('ui-swap').classList.remove('hidden-section');
-        }
-
-        function handleConnect() {
-            playBeep();
-            document.getElementById('statusDot').className = "h-2 w-2 bg-green-500 rounded-full inline-block";
-            document.getElementById('statusText').innerText = "Connected";
-            document.getElementById('connectBtn').innerText = "0x2091...";
-        }
-
-        function executeAction() {
-            playBeep();
-            music.pause(); // Transaction music stop
-            const talk = new SpeechSynthesisUtterance("Executing transaction route. Silence initiated.");
-            window.speechSynthesis.speak(talk);
-            
-            alert("Transaction in Progress...");
-            
-            setTimeout(() => {
-                music.play(); // Success music resume
-                const done = new SpeechSynthesisUtterance("Route successful. Balance updated.");
-                window.speechSynthesis.speak(done);
-                alert("Success!");
-            }, 4000);
-        }
-    </script>
-</body>
-    </html>
-    
+            <div class="text-
+                                                                                                            
