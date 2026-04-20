@@ -41,13 +41,13 @@
     </div>
 
     <div class="glass-card p-5 mb-6 bg-gradient-to-br from-slate-900 to-slate-950">
-        <p class="text-[10px] font-black text-blue-400 uppercase mb-4 italic text-center italic">Institutional Route Mapping</p>
+        <p class="text-[10px] font-black text-blue-400 uppercase mb-4 italic text-center">Institutional Route Mapping</p>
         <div class="flex justify-between items-center px-4 relative">
             <div class="text-center"><i class="fa-brands fa-ethereum text-blue-400 text-lg"></i><p class="text-[7px] mt-1">SOURCE</p></div>
             <div class="flex-1 h-[2px] bg-slate-800 mx-2 relative overflow-hidden"><div class="absolute h-full bg-blue-500 w-1/2" id="route-flow"></div></div>
-            <div class="text-center"><div class="w-10 h-10 rounded-full bg-blue-600 flex items-center justify-center shadow-lg border border-blue-400 pulse"><i class="fa-solid fa-a text-white"></i></div><p class="text-[8px] font-black text-blue-400 mt-1">ARC NODE</p></div>
+            <div class="text-center"><div class="w-10 h-10 rounded-full bg-blue-600 flex items-center justify-center shadow-lg border border-blue-400"><i class="fa-solid fa-a text-white"></i></div><p class="text-[8px] font-black text-blue-400 mt-1 uppercase">Arc Node</p></div>
             <div class="flex-1 h-[2px] bg-slate-800 mx-2"></div>
-            <div class="text-center"><i class="fa-solid fa-vault text-green-400 text-lg"></i><p class="text-[7px] mt-1 uppercase font-bold">Settle</p></div>
+            <div class="text-center"><i class="fa-solid fa-vault text-green-400 text-lg"></i><p class="text-[7px] mt-1 uppercase">Settle</p></div>
         </div>
     </div>
 
@@ -69,39 +69,43 @@
     <div class="glass-card p-6 min-h-[300px]">
         
         <div id="sec-transfer" class="space-y-4">
-            <label class="text-[9px] text-slate-500 font-bold uppercase tracking-widest ml-1">Recipient Address</label>
+            <div class="flex justify-between items-center px-1"><label class="text-[9px] text-slate-500 font-bold uppercase">Recipient Address</label></div>
             <input type="text" id="t-addr" placeholder="0x..." class="w-full bg-slate-950 border border-slate-800 p-4 rounded-xl text-xs font-mono outline-none focus:border-blue-500">
-            <label class="text-[9px] text-slate-500 font-bold uppercase tracking-widest ml-1">Amount USDC</label>
-            <input type="number" id="t-amt" placeholder="0.00" class="w-full bg-slate-950 border border-slate-800 p-4 rounded-xl text-xs font-bold outline-none">
+            
+            <div class="flex justify-between items-center px-1"><label class="text-[9px] text-slate-500 font-bold uppercase">Amount</label><span class="text-[9px] text-blue-500 font-bold uppercase">Asset: USDC</span></div>
+            <div class="relative">
+                <input type="number" id="t-amt" placeholder="0.00" class="w-full bg-slate-950 border border-slate-800 p-4 rounded-xl text-xs font-bold outline-none">
+                <span class="absolute right-4 top-4 text-xs font-bold text-slate-500">USDC</span>
+            </div>
             <button onclick="executeAction('Transfer')" class="w-full action-btn py-5 rounded-xl text-[11px] font-black uppercase text-white tracking-widest">Execute Transfer</button>
         </div>
 
         <div id="sec-swap" class="hidden-section space-y-4">
             <div class="bg-slate-950 p-4 rounded-xl border border-slate-800">
-                <div class="flex justify-between mb-2"><span class="text-[9px] text-slate-500 font-bold uppercase">Sell</span><span class="text-[9px] text-slate-500 font-bold uppercase">Balance: <span id="swap-bal">0.00</span></span></div>
-                <div class="flex justify-between items-center"><span class="text-sm font-bold">USDC</span><input type="number" id="s-amt" placeholder="0.00" class="bg-transparent text-right text-sm font-bold outline-none w-1/2"></div>
+                <div class="flex justify-between mb-2"><span class="text-[9px] text-slate-500 font-bold uppercase tracking-widest">Sell Asset</span><span class="text-[9px] text-slate-500 font-bold uppercase">Balance: <span id="swap-bal">0.00</span></span></div>
+                <div class="flex justify-between items-center"><span class="text-sm font-black text-white">USDC</span><input type="number" id="s-amt" placeholder="0.00" class="bg-transparent text-right text-sm font-bold outline-none w-1/2"></div>
             </div>
-            <div class="text-center -my-2"><i class="fa-solid fa-repeat text-blue-500"></i></div>
+            <div class="text-center -my-2"><i class="fa-solid fa-repeat text-blue-500 text-sm"></i></div>
             <div class="bg-slate-950 p-4 rounded-xl border border-slate-800">
-                <div class="flex justify-between mb-2"><span class="text-[9px] text-slate-500 font-bold uppercase">Buy</span></div>
-                <div class="flex justify-between items-center"><span class="text-sm font-bold text-blue-400">USYC</span><span class="text-sm font-bold text-slate-600" id="s-receive">0.00</span></div>
+                <div class="flex justify-between mb-2"><span class="text-[9px] text-slate-500 font-bold uppercase tracking-widest">Buy Asset</span></div>
+                <div class="flex justify-between items-center"><span class="text-sm font-black text-blue-400 uppercase">USYC</span><span class="text-sm font-bold text-slate-500" id="s-receive">0.00</span></div>
             </div>
             <button onclick="executeAction('Swap')" class="w-full action-btn py-5 rounded-xl text-[11px] font-black uppercase text-white">Execute Swap</button>
         </div>
 
         <div id="sec-bridge" class="hidden-section space-y-4">
             <div class="grid grid-cols-2 gap-3 mb-2">
-                <div class="bg-slate-950 p-3 rounded-xl border border-slate-800 text-center"><p class="text-[8px] text-slate-500 uppercase">From</p><p class="text-[10px] font-bold">Arbitrum</p></div>
-                <div class="bg-slate-950 p-3 rounded-xl border border-blue-900 text-center"><p class="text-[8px] text-blue-500 uppercase">To</p><p class="text-[10px] font-bold text-blue-400">Arc Network</p></div>
+                <div class="bg-slate-950 p-3 rounded-xl border border-slate-800 text-center"><p class="text-[8px] text-slate-500 uppercase">From Network</p><p class="text-[10px] font-bold">Arbitrum</p></div>
+                <div class="bg-slate-950 p-3 rounded-xl border border-blue-900 text-center"><p class="text-[8px] text-blue-500 uppercase">To Network</p><p class="text-[10px] font-bold text-blue-400">Arc Network</p></div>
             </div>
-            <label class="text-[9px] text-slate-500 font-bold uppercase tracking-widest ml-1">Bridge Amount</label>
+            <div class="flex justify-between items-center px-1"><label class="text-[9px] text-slate-500 font-bold uppercase">Amount to Bridge</label><span class="text-[9px] text-slate-500 font-bold">USDC</span></div>
             <input type="number" id="b-amt" placeholder="0.00" class="w-full bg-slate-950 border border-slate-800 p-4 rounded-xl text-xs font-bold outline-none">
             <button onclick="executeAction('Bridge')" class="w-full action-btn py-5 rounded-xl text-[11px] font-black uppercase text-white tracking-widest">Initiate Bridge</button>
         </div>
     </div>
 
     <div id="status-box" class="hidden mt-4 glass-card p-3 border-blue-500/50 text-center">
-        <p class="text-[10px] font-bold text-blue-400 uppercase italic">Settlement Speed: <span id="timer" class="text-white font-mono">0.000s</span></p>
+        <p class="text-[10px] font-bold text-blue-400 uppercase italic">Settlement Finality: <span id="timer" class="text-white font-mono">0.000s</span></p>
     </div>
 
     <script>
@@ -125,16 +129,14 @@
                         method: 'wallet_addEthereumChain',
                         params: [{ chainId: ARC_CHAIN_ID, chainName: 'Arc Testnet', nativeCurrency: { name: 'USDC', symbol: 'USDC', decimals: 18 }, rpcUrls: [ARC_RPC] }]
                     });
-                } catch (e) { alert("Authorization Denied"); }
+                } catch (e) { alert("Authorization Error"); }
             }
         }
 
         function showTab(id) {
             document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('tab-active'));
             document.getElementById('btn-'+id).classList.add('tab-active');
-            document.getElementById('sec-transfer').classList.add('hidden-section');
-            document.getElementById('sec-swap').classList.add('hidden-section');
-            document.getElementById('sec-bridge').classList.add('hidden-section');
+            document.querySelectorAll('[id^="sec-"]').forEach(s => s.classList.add('hidden-section'));
             document.getElementById('sec-'+id).classList.remove('hidden-section');
         }
 
@@ -152,12 +154,11 @@
             setTimeout(() => { clearInterval(clock); alert(`✅ ${type} Finalized on Arc Testnet!`); }, 2000);
         }
 
-        // Real-time Swap Calculation Simulation
         document.getElementById('s-amt').addEventListener('input', (e) => {
             const val = e.target.value;
-            document.getElementById('s-receive').innerText = val ? (val * 0.998).toFixed(2) : "0.00";
+            document.getElementById('s-receive').innerText = val ? (val * 0.998).toFixed(4) : "0.0000";
         });
     </script>
 </body>
-            </html>
+                                                                    </html>
     
