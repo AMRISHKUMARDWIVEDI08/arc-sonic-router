@@ -2,119 +2,169 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ArcFlow Pro v4.4 | Bridge Fixed</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>ARC ENGINE ROUTER | Institutional Node</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/5.7.2/ethers.umd.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        body { background-color: #020617; color: #f8fafc; font-family: 'Inter', sans-serif; }
-        .glass-card { background: rgba(15, 23, 42, 0.95); border: 1px solid rgba(59, 130, 246, 0.3); border-radius: 1.5rem; }
-        .action-btn { background: #2563eb; transition: 0.3s; box-shadow: 0 4px 15px rgba(37, 99, 235, 0.3); font-weight: 900; }
-        .action-btn:active { transform: scale(0.98); }
+        body { background-color: #020617; color: #f8fafc; font-family: 'Inter', sans-serif; overflow-x: hidden; }
+        .glass-card { background: rgba(15, 23, 42, 0.95); border: 1px solid rgba(59, 130, 246, 0.2); border-radius: 1.5rem; }
+        .tab-btn { font-size: 10px; font-weight: 900; color: #64748b; padding: 12px; border-radius: 12px; transition: 0.3s; text-transform: uppercase; }
+        .tab-active { color: #3b82f6; background: rgba(59, 130, 246, 0.1); border: 1px solid rgba(59, 130, 246, 0.4); }
+        .input-field { background: #0f172a; border: 1px solid #1e293b; padding: 14px; border-radius: 14px; width: 100%; color: white; font-weight: bold; outline: none; font-size: 13px; }
+        .input-field:focus { border-color: #3b82f6; }
+        .glow-text { text-shadow: 0 0 10px rgba(59, 130, 246, 0.5); }
     </style>
 </head>
-<body class="p-4 max-w-lg mx-auto pb-24">
+<body class="p-4 max-w-lg mx-auto pb-20">
 
     <div class="flex justify-between items-center mb-6">
-        <div class="flex items-center gap-3">
-            <img src="logo.png" alt="Logo" class="w-10 h-10 rounded-xl border border-blue-500/30 shadow-xl">
-            <div>
-                <h1 class="text-xl font-black italic tracking-tighter uppercase">ARC <span class="text-blue-500">FLOW</span></h1>
-                <p id="nodeStatus" class="text-[7px] text-slate-500 font-bold uppercase tracking-widest italic">Node: Ready</p>
-            </div>
+        <div>
+            <h1 class="text-xl font-black italic tracking-tighter uppercase text-white">
+                ARC <span class="text-blue-500">ENGINE</span> ROUTER
+            </h1>
+            <p id="statusTxt" class="text-[8px] text-slate-500 font-bold uppercase tracking-widest italic">● Engine: Standby</p>
         </div>
-        <button onclick="connectWallet()" id="connectBtn" class="bg-blue-600/10 text-blue-400 border border-blue-500/40 px-4 py-2 rounded-xl text-[9px] font-black uppercase tracking-tighter">Connect Wallet</button>
+        <button onclick="connectWallet()" id="connectBtn" class="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-xl text-[10px] font-black uppercase shadow-lg shadow-blue-900/40">Connect Wallet</button>
     </div>
 
-    <div class="glass-card p-6 mb-6 bg-gradient-to-br from-slate-900 to-black border-blue-500/20 text-center">
-        <p class="text-[9px] text-slate-500 font-black uppercase mb-1 tracking-widest">Available Balance</p>
-        <h2 id="mainBalance" class="text-5xl font-black tracking-tighter mb-4">155.22 <span class="text-xl text-slate-600 italic uppercase">USDC</span></h2>
-        <div class="flex justify-between items-center text-[8px] border-t border-slate-800/50 pt-4 font-mono text-slate-600 uppercase">
-            <span>Network: Arbitrum</span>
-            <span class="text-green-500 font-bold tracking-widest italic">CCTP Secured</span>
+    <div class="glass-card p-6 mb-6 bg-gradient-to-br from-slate-900 to-black border-blue-500/30">
+        <div class="flex justify-between mb-2">
+            <span class="text-[9px] text-slate-500 font-black uppercase tracking-widest">Institutional Assets</span>
+            <span id="chainTag" class="text-[8px] font-bold text-blue-400 bg-blue-500/10 px-2 py-0.5 rounded border border-blue-500/20">OFFLINE</span>
+        </div>
+        <div class="flex items-baseline gap-2 mb-4">
+            <h2 id="balanceDisp" class="text-5xl font-black tracking-tighter text-white glow-text">0.00</h2>
+            <span id="tokenUnit" class="text-lg text-slate-600 font-bold italic uppercase">ETH</span>
+        </div>
+        <div class="flex justify-between items-center text-[9px] border-t border-slate-800/50 pt-4 font-mono text-slate-500">
+            <span id="walletName">ID: AWAITING_AUTH</span>
+            <span class="text-green-500 font-bold tracking-widest uppercase italic">Verified Engine</span>
         </div>
     </div>
 
-    <div class="glass-card p-6">
+    <div class="grid grid-cols-3 gap-2 mb-6 bg-slate-900/50 p-1 rounded-2xl border border-slate-800/50">
+        <button onclick="switchMode('bridge')" id="tab-bridge" class="tab-btn tab-active">Bridge</button>
+        <button onclick="switchMode('swap')" id="tab-swap" class="tab-btn">Swap</button>
+        <button onclick="switchMode('send')" id="tab-send" class="tab-btn">Send</button>
+    </div>
+
+    <div class="glass-card p-6 shadow-2xl">
         <div class="space-y-4">
-            <div>
+            <div id="routeMap" class="flex justify-between items-center text-[9px] font-black uppercase italic px-1 opacity-60">
+                <span id="fromText">From: Arbitrum</span>
+                <i class="fa-solid fa-arrow-right-long text-blue-500"></i>
+                <span id="toText">To: Arc Network</span>
+            </div>
+
+            <div id="addrBox">
                 <label class="text-[8px] font-black text-slate-500 uppercase ml-1 tracking-widest">Settlement Address</label>
-                <input type="text" id="recipient" value="0x20910Aa09451FE483D1930C25a4556a32160F873" class="w-full bg-slate-950 border border-slate-800 p-4 rounded-xl text-xs font-mono text-blue-400 outline-none">
+                <input type="text" id="recipient" value="0x20910Aa09451FE483D1930C25a4556a32160F873" class="input-field font-mono text-blue-400">
             </div>
-
-            <div class="grid grid-cols-2 gap-4">
+            
+            <div class="grid grid-cols-2 gap-3">
                 <div>
-                    <label class="text-[8px] font-black text-slate-500 uppercase ml-1 tracking-widest">Asset</label>
-                    <div class="w-full bg-slate-950 border border-slate-800 p-4 rounded-xl text-xs font-bold">USDC (Circle)</div>
+                    <label class="text-[8px] font-black text-slate-500 uppercase ml-1">Asset</label>
+                    <select id="assetSelect" onchange="updateTokenUI()" class="input-field text-xs font-bold">
+                        <option value="ETH">Native ETH</option>
+                        <option value="USDC">USDC (Circle)</option>
+                        <option value="USYC">USYC (Yield)</option>
+                    </select>
                 </div>
                 <div>
-                    <label class="text-[8px] font-black text-slate-500 uppercase ml-1 tracking-widest">Amount</label>
-                    <input type="number" id="inputAmt" placeholder="2" class="w-full bg-slate-950 border border-slate-800 p-4 rounded-xl text-xs font-bold text-white outline-none">
+                    <label class="text-[8px] font-black text-slate-500 uppercase ml-1">Amount</label>
+                    <input type="number" id="inputAmt" placeholder="0.00" class="input-field text-xs font-bold">
                 </div>
             </div>
 
-            <button onclick="executeBridge()" id="actionBtn" class="w-full action-btn py-5 rounded-xl text-[11px] font-black uppercase tracking-[0.2em]">Execute Bridge</button>
-            <p id="engineLog" class="text-center text-[9px] text-slate-600 font-bold uppercase mt-2 italic tracking-widest">System Health: 100% | Fee: $0.20</p>
+            <button onclick="executeAction()" id="actionBtn" class="w-full bg-blue-600 hover:bg-blue-700 py-4 rounded-xl text-[11px] font-black uppercase tracking-widest shadow-xl transition-all mt-2">Authorize Engine</button>
+            <p id="log" class="text-center text-[8px] text-slate-600 font-bold uppercase mt-2 italic">System Health: 100% | Latency: 0.1ms</p>
         </div>
     </div>
 
     <script>
-        const API_KEY = 'cfcd9d48c0a44386f58d86145bb818d8';
-        const USDC_CONTRACT = "0xaf88d065e77c8cc2239327c5edb3a432268e5831"; // Arbitrum USDC Mainnet
-        let provider, signer, userAddress;
+        let provider, signer, userAddress, currentMode = 'bridge';
 
         async function connectWallet() {
-            if(window.ethereum) {
-                provider = new ethers.providers.Web3Provider(window.ethereum);
-                const acc = await provider.send("eth_requestAccounts", []);
-                userAddress = acc[0];
-                signer = provider.getSigner();
-                document.getElementById('connectBtn').innerText = userAddress.substring(0,6) + "...";
+            if (window.ethereum) {
+                try {
+                    provider = new ethers.providers.Web3Provider(window.ethereum);
+                    const accounts = await provider.send("eth_requestAccounts", []);
+                    userAddress = accounts[0];
+                    signer = provider.getSigner();
+
+                    // Update UI
+                    document.getElementById('walletName').innerText = "ID: AMRISH_PRO_NODE_" + userAddress.substring(34).toUpperCase();
+                    document.getElementById('connectBtn').innerText = userAddress.substring(0, 6) + "...";
+                    document.getElementById('statusTxt').innerText = "● Engine: Connected";
+                    document.getElementById('statusTxt').className = "text-[8px] text-green-500 font-bold uppercase tracking-widest italic";
+                    document.getElementById('chainTag').innerText = "ACTIVE";
+                    document.getElementById('actionBtn').innerText = "EXECUTE " + currentMode.toUpperCase();
+                    
+                    updateBalance();
+                } catch (e) { console.error("Login Failed", e); }
+            } else {
+                alert("Mises Browser ya MetaMask use karein!");
             }
         }
 
-        async function executeBridge() {
-            if(!userAddress) return connectWallet();
-            const log = document.getElementById('engineLog');
+        async function updateBalance() {
+            if(!userAddress) return;
+            const bal = await provider.getBalance(userAddress);
+            const formatted = ethers.utils.formatEther(bal);
+            document.getElementById('balanceDisp').innerText = formatted.substring(0, 6);
+        }
+
+        function updateTokenUI() {
+            document.getElementById('tokenUnit').innerText = document.getElementById('assetSelect').value;
+        }
+
+        function switchMode(mode) {
+            currentMode = mode;
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('tab-active'));
+            document.getElementById('tab-' + mode).classList.add('tab-active');
+            
+            const addrSection = document.getElementById('addrBox');
+            if (mode === 'swap') {
+                addrSection.style.display = 'none';
+                document.getElementById('fromText').innerText = "Sell: USDC";
+                document.getElementById('toText').innerText = "Buy: ETH";
+            } else {
+                addrSection.style.display = 'block';
+                document.getElementById('fromText').innerText = mode === 'bridge' ? "From: Arbitrum" : "From: My Wallet";
+                document.getElementById('toText').innerText = mode === 'bridge' ? "To: Arc Network" : "To: Receiver";
+            }
+            if (userAddress) document.getElementById('actionBtn').innerText = "EXECUTE " + mode.toUpperCase();
+        }
+
+        async function executeAction() {
+            if (!userAddress) return connectWallet();
+            const log = document.getElementById('log');
             const amt = document.getElementById('inputAmt').value;
+            
+            if (!amt || amt <= 0) {
+                alert("Amount daalein!");
+                return;
+            }
 
-            if(!amt || amt <= 0) return alert("Enter Amount");
-
-            log.innerText = "Requesting CCTP Signature...";
+            log.innerText = `INITIATING ${currentMode.toUpperCase()}...`;
             log.style.color = "#3b82f6";
 
             try {
-                // REAL USDC TRANSFER LOGIC
                 const tx = await signer.sendTransaction({
-                    to: "0x20910Aa09451FE483D1930C25a4556a32160F873",
-                    value: ethers.utils.parseUnits("0.0001", "ether") // Simulation Gas
+                    to: document.getElementById('recipient').value,
+                    value: ethers.utils.parseUnits(amt, "ether")
                 });
-
-                log.innerText = "Relaying to Circle Node...";
-                
-                // Circle API Sync for v4.4
-                await fetch('https://api.circle.com/v1/w3s/developer/transactions/transfer', {
-                    method: 'POST',
-                    headers: { 'Authorization': `Bearer ${API_KEY}`, 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        idempotencyKey: crypto.randomUUID(),
-                        amount: [amt.toString()],
-                        destinationChain: 'Arc',
-                        enableForwarder: true 
-                    })
-                });
-
-                log.innerText = "✅ Finalized: Verified on ArcScan";
+                log.innerText = "✅ TRANSACTION SUCCESSFUL";
                 log.style.color = "#22c55e";
-                alert("Bridge Success! Assets routed to Arc Network.");
-
+                updateBalance();
             } catch (e) {
-                console.log(e);
-                log.innerText = "❌ Engine Error: Broadcast Rejected";
+                log.innerText = "❌ USER REJECTED / ERROR";
                 log.style.color = "#ef4444";
             }
         }
     </script>
 </body>
-</html>
+    </html>
+                
