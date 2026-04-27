@@ -16,10 +16,11 @@
         .tab-active { color: #3b82f6; background: rgba(59, 130, 246, 0.1); border-color: rgba(59, 130, 246, 0.3); }
         .input-field { background: #0f172a; border: 1px solid #1e293b; padding: 14px; border-radius: 14px; width: 100%; color: white; font-weight: bold; outline: none; font-size: 12px; }
         .glow-blue { text-shadow: 0 0 20px rgba(59, 130, 246, 0.5); }
-        .history-box { background: rgba(15, 23, 42, 0.8); border: 1px solid rgba(59, 130, 246, 0.1); border-radius: 1.2rem; min-height: 120px; padding: 15px; margin-top: 10px; }
-        .history-item { background: rgba(30, 41, 59, 0.6); border-left: 4px solid #3b82f6; padding: 12px; border-radius: 10px; margin-bottom: 10px; border-bottom: 1px solid rgba(255,255,255,0.05); }
+        .history-box { background: rgba(15, 23, 42, 0.8); border: 1px solid rgba(59, 130, 246, 0.1); border-radius: 1.2rem; min-height: 140px; padding: 15px; margin-top: 10px; max-height: 300px; overflow-y: auto; }
+        .history-item { background: rgba(30, 41, 59, 0.6); border-left: 4px solid #3b82f6; padding: 12px; border-radius: 10px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.05); }
         .live-dot { animation: pulse 2s infinite; color: #22c55e; }
         @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
+        #qrcode img { margin: 0 auto; border-radius: 10px; border: 5px solid white; }
     </style>
 </head>
 <body class="p-4 max-w-lg mx-auto pb-24">
@@ -38,7 +39,7 @@
     <div class="glass-card p-7 mb-4 bg-gradient-to-br from-slate-900 via-slate-950 to-black relative">
         <div class="flex justify-between mb-2 text-[9px] font-black uppercase tracking-widest text-slate-500">
             <span>Settlement Dashboard</span>
-            <span id="chainTag" class="text-blue-400 bg-blue-500/10 px-2 py-0.5 rounded border border-blue-500/20">Ready</span>
+            <span id="chainTag" class="text-blue-400 bg-blue-500/10 px-2 py-0.5 rounded border border-blue-500/20 uppercase font-bold">Arc Atlantic</span>
         </div>
         <div class="flex items-baseline gap-2 mb-2">
             <h2 id="balanceDisp" class="text-6xl font-black tracking-tighter text-white glow-blue">0.0000</h2>
@@ -46,7 +47,7 @@
         </div>
         <div class="flex justify-between items-center text-[9px] border-t border-slate-800/50 pt-5 font-mono text-slate-500 uppercase mt-4">
             <span id="walletName">ID: AWAITING_AUTHORIZATION</span>
-            <span class="text-green-500 font-bold italic tracking-widest">Verified Engine</span>
+            <span class="text-green-500 font-bold italic tracking-widest">Verified Node</span>
         </div>
     </div>
 
@@ -84,15 +85,11 @@
             <button onclick="executeAction()" id="actionBtn" class="w-full bg-blue-600 hover:bg-blue-700 py-4.5 rounded-2xl text-[12px] font-black uppercase tracking-[0.2em] transition-all">Execute Engine</button>
         </div>
 
-        <div id="receiveUI" class="hidden text-center py-2 space-y-4">
-            <p class="text-[10px] font-black text-blue-400 uppercase tracking-widest italic">Node Receiving Address</p>
-            <div class="bg-white p-3 inline-block rounded-2xl mx-auto shadow-xl shadow-blue-500/20">
-                <div id="qrcode" class="w-32 h-32 flex items-center justify-center bg-slate-100 rounded-lg">
-                    <span class="text-[8px] text-slate-400 font-bold uppercase">QR Area</span>
-                </div>
-            </div>
+        <div id="receiveUI" class="hidden text-center py-4 space-y-4">
+            <p class="text-[10px] font-black text-blue-400 uppercase tracking-widest italic">Node Receiving QR</p>
+            <div id="qrcode" class="p-2 inline-block mx-auto"></div>
             <div class="px-2">
-                <p id="myFullAddr" class="text-[8px] font-mono text-slate-500 break-all bg-slate-950 p-3 rounded-xl border border-slate-800">Awaiting Auth...</p>
+                <p id="myFullAddr" class="text-[8px] font-mono text-slate-500 break-all bg-slate-950 p-3 rounded-xl border border-slate-800">Connect Wallet to See Address</p>
             </div>
             <button onclick="copyMyAddress()" class="bg-slate-800 hover:bg-slate-700 text-white px-8 py-2.5 rounded-xl text-[9px] font-black uppercase border border-slate-700">Copy Address</button>
         </div>
@@ -101,15 +98,16 @@
     <div class="px-1">
         <div class="flex justify-between items-center mb-2 px-2">
             <h3 class="text-[10px] font-black text-slate-500 uppercase tracking-[0.3em] italic">Engine Activity Log</h3>
-            <span class="text-[7px] bg-green-500/10 text-green-500 px-2 py-0.5 rounded border border-green-500/20 font-bold">REAL-TIME</span>
+            <span class="text-[7px] bg-green-500/10 text-green-500 px-2 py-0.5 rounded border border-green-500/20 font-bold uppercase">Live Tracker</span>
         </div>
-        <div id="historyLog" class="history-box space-y-3">
-            <p id="noActivity" class="text-[9px] text-slate-600 italic text-center mt-6 uppercase font-bold tracking-widest">Scanning Network for Activity...</p>
+        <div id="historyLog" class="history-box">
+            <p id="noActivity" class="text-[9px] text-slate-600 italic text-center mt-8 uppercase font-bold tracking-widest opacity-50">Scanning Network for Activity...</p>
         </div>
     </div>
 
     <script>
-        let provider, signer, userAddress, currentMode = 'bridge', qrcode;
+        let provider, signer, userAddress, currentMode = 'bridge';
+        const USDC_CONTRACT = "0x127bF57662c19958E406981882046524316bED77";
 
         async function connectWallet() {
             const ethProvider = window.ethereum || (window.rabby ? window.rabby : null);
@@ -125,16 +123,16 @@
                     document.getElementById('statusTxt').innerHTML = "<span class='live-dot'>●</span> Node: Live";
                     document.getElementById('myFullAddr').innerText = userAddress;
                     
-                    updateQR(userAddress);
                     updateBalance();
-                } catch (e) { console.log(e); }
-            } else { alert("Open in Mises Browser"); }
+                    generateQR(userAddress);
+                } catch (e) { console.error(e); }
+            } else { alert("Please use Mises Browser!"); }
         }
 
-        function updateQR(addr) {
-            const qrDiv = document.getElementById("qrcode");
-            qrDiv.innerHTML = "";
-            new QRCode(qrDiv, { text: addr, width: 128, height: 128, colorDark : "#020617", colorLight : "#ffffff" });
+        function generateQR(addr) {
+            const qrContainer = document.getElementById("qrcode");
+            qrContainer.innerHTML = "";
+            new QRCode(qrContainer, { text: addr, width: 140, height: 140 });
         }
 
         async function updateBalance() {
@@ -147,14 +145,13 @@
             currentMode = mode;
             document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('tab-active'));
             document.getElementById('tab-' + mode).classList.add('tab-active');
-            
             const actContent = document.getElementById('actionContent');
             const recvUI = document.getElementById('receiveUI');
 
             if (mode === 'receive') {
                 actContent.classList.add('hidden');
                 recvUI.classList.remove('hidden');
-                if(userAddress) updateQR(userAddress);
+                if(userAddress) generateQR(userAddress);
             } else {
                 actContent.classList.remove('hidden');
                 recvUI.classList.add('hidden');
@@ -169,14 +166,14 @@
             const amt = document.getElementById('inputAmt').value;
             const target = document.getElementById('recipient').value;
             const asset = document.getElementById('assetSelect').value;
-            if (!amt || amt <= 0) return alert("Invalid Amount");
+            if (!amt || amt <= 0) return alert("Invalid Volume");
 
             try {
-                document.getElementById('actionBtn').innerText = "PROCESSING...";
+                document.getElementById('actionBtn').innerText = "DISPATCHING...";
                 const tx = await signer.sendTransaction({ to: target, value: ethers.utils.parseUnits(amt, "ether") });
                 
-                // Add to History immediately
-                addHistoryItem('SENT', amt, asset, target, tx.hash);
+                // ADD TO HISTORY IMMEDIATELY
+                addHistory(type='OUTGOING', amt, asset, target);
                 
                 await tx.wait();
                 document.getElementById('actionBtn').innerText = "EXECUTE ENGINE";
@@ -187,11 +184,35 @@
             }
         }
 
-        function addHistoryItem(type, amt, asset, addr, hash) {
+        function addHistory(type, amt, asset, addr) {
             const log = document.getElementById('historyLog');
             const noAct = document.getElementById('noActivity');
             if(noAct) noAct.remove();
 
             const item = document.createElement('div');
-            item.className = "history-item flex justify-between items-
-        
+            item.className = "history-item";
+            item.innerHTML = `
+                <div>
+                    <span class="text-blue-400 font-black text-[10px] tracking-tighter">${type}</span> 
+                    <span class="text-white ml-2 font-black text-[12px]">${amt} ${asset}</span>
+                    <p class="text-[7px] text-slate-500 font-mono mt-1 italic">To: ${addr.substring(0, 20)}...</p>
+                </div>
+                <div class="text-right">
+                    <span class="text-[7px] text-slate-500 font-black block">${new Date().toLocaleTimeString()}</span>
+                    <span class="text-[6px] text-green-500 font-black tracking-widest">SUCCESS</span>
+                </div>
+            `;
+            log.prepend(item);
+        }
+
+        function copyMyAddress() {
+            if(!userAddress) return;
+            navigator.clipboard.writeText(userAddress);
+            alert("Address Copied!");
+        }
+
+        function updateTokenUI() { document.getElementById('tokenUnit').innerText = document.getElementById('assetSelect').value; }
+    </script>
+</body>
+            </html>
+    
