@@ -15,16 +15,16 @@
         .tab-active { color: #3b82f6; background: rgba(59, 130, 246, 0.1); border-color: rgba(59, 130, 246, 0.3); }
         .input-field { background: #0f172a; border: 1px solid #1e293b; padding: 14px; border-radius: 14px; width: 100%; color: white; font-weight: bold; outline: none; font-size: 13px; }
         .glow-blue { text-shadow: 0 0 20px rgba(59, 130, 246, 0.5); }
+        .success-box { background: rgba(34, 197, 94, 0.1); border: 1px solid rgba(34, 197, 94, 0.2); border-radius: 12px; padding: 10px; display: none; }
         @keyframes pulse-live { 0% { opacity: 1; } 50% { opacity: 0.3; } 100% { opacity: 1; } }
         .live-dot { animation: pulse-live 2s infinite; color: #22c55e; }
-        .success-box { background: rgba(34, 197, 94, 0.1); border: 1px solid rgba(34, 197, 94, 0.2); border-radius: 12px; padding: 10px; display: none; margin-bottom: 15px; }
     </style>
 </head>
 <body class="p-4 max-w-lg mx-auto pb-24">
 
     <div class="flex justify-between items-center mb-8 pt-2">
         <div class="flex items-center gap-3">
-            <img src="https://arc.xyz/favicon.ico" alt="Arc" class="w-12 h-12 rounded-xl border border-blue-500/30 object-cover shadow-lg shadow-blue-500/20">
+            <img src="logo.png" alt="Arc" class="w-12 h-12 rounded-xl border border-blue-500/30 object-cover shadow-lg shadow-blue-500/20" onerror="this.src='https://arc.xyz/favicon.ico'">
             <div>
                 <h1 class="text-2xl font-black italic tracking-tighter uppercase text-white leading-none">
                     ARC <span class="text-blue-500">ENGINE</span>
@@ -47,16 +47,17 @@
             <span id="tokenUnit" class="text-xl text-slate-600 font-bold italic uppercase">ETH</span>
         </div>
         <p class="text-[10px] text-slate-500 font-mono italic">Prev: <span id="prevBalance">0.0000</span> ETH</p>
+        
         <div class="flex justify-between items-center text-[9px] border-t border-slate-800/50 pt-5 font-mono text-slate-500 uppercase mt-4">
             <span id="walletName">ID: AWAITING_AUTHORIZATION</span>
-            <span class="text-green-500 font-bold italic tracking-widest uppercase">Secured Node</span>
+            <span class="text-green-500 font-bold italic tracking-widest uppercase text-[8px]">Verified Engine v8.0</span>
         </div>
     </div>
 
-    <div id="receiveSection" class="glass-card p-6 mb-6 border-dashed border-blue-500/50 bg-blue-500/5">
+    <div id="receiveSection" class="glass-card p-6 mb-6 border-dashed border-blue-500/50 bg-blue-500/5 relative">
         <div class="flex justify-between items-center mb-3">
             <span class="text-[10px] font-black text-blue-400 uppercase italic">Verified Assets (USDC)</span>
-            <button onclick="copyMyAddress()" class="text-[9px] bg-blue-600/20 text-blue-400 px-3 py-1 rounded-lg border border-blue-500/30 hover:bg-blue-600 hover:text-white transition-all font-black">COPY ADDRESS</button>
+            <button onclick="copyMyAddress()" class="text-[9px] bg-blue-600/20 text-blue-400 px-3 py-1 rounded-lg border border-blue-500/30 font-black uppercase hover:bg-blue-600 hover:text-white transition-all">Copy Address</button>
         </div>
         <div class="flex justify-between items-end">
             <div>
@@ -64,12 +65,12 @@
                 <h3 id="usdcBalance" class="text-4xl font-black text-white glow-blue">0.00</h3>
             </div>
             <div class="text-right">
-                <p id="myAddressDisp" class="text-[7px] font-mono text-slate-500 break-all max-w-[150px] leading-tight">Awaiting Connection...</p>
+                <p id="myAddressDisp" class="text-[7px] font-mono text-slate-500 break-all max-w-[150px] leading-tight leading-tight">Awaiting Connection...</p>
             </div>
         </div>
     </div>
 
-    <div class="grid grid-cols-3 gap-2 mb-6 bg-slate-900/50 p-1.5 rounded-2xl border border-slate-800/50">
+    <div class="grid grid-cols-3 gap-2 mb-6 bg-slate-900/50 p-1.5 rounded-2xl border border-slate-800/50 shadow-inner">
         <button onclick="switchMode('send')" id="tab-send" class="tab-btn">SEND</button>
         <button onclick="switchMode('swap')" id="tab-swap" class="tab-btn">SWAP</button>
         <button onclick="switchMode('bridge')" id="tab-bridge" class="tab-btn tab-active">BRIDGE</button>
@@ -82,29 +83,33 @@
                 <i class="fa-solid fa-right-left mx-2"></i>
                 <span id="toText">To: Arc Network</span>
             </div>
+
             <div id="successBox" class="success-box text-center">
-                <p class="text-green-500 text-[10px] font-black uppercase tracking-widest">Transaction Settled!</p>
-                <a id="txLink" href="#" target="_blank" class="text-blue-400 text-[8px] font-bold underline mt-1 block tracking-widest uppercase">View Explorer</a>
+                <p class="text-green-500 text-[10px] font-black uppercase tracking-widest">Transaction Sent!</p>
+                <a id="txLink" href="#" target="_blank" class="text-blue-400 text-[8px] font-bold underline mt-1 block">VIEW ON EXPLORER</a>
             </div>
+
             <div id="addrBox">
-                <label class="text-[9px] font-black text-slate-500 uppercase ml-1 tracking-widest">Target Node Address</label>
-                <input type="text" id="recipient" value="0x20910Aa09451FE483D1930C25a4556a32160F873" class="input-field font-mono text-blue-400 mt-1 shadow-inner">
+                <label class="text-[9px] font-black text-slate-500 uppercase ml-1 tracking-widest italic tracking-widest">Target Node Address</label>
+                <input type="text" id="recipient" value="0x20910Aa09451FE483D1930C25a4556a32160F873" class="input-field font-mono text-blue-400 mt-1 shadow-inner shadow-inner">
             </div>
+            
             <div class="grid grid-cols-2 gap-4">
                 <div>
                     <label class="text-[9px] font-black text-slate-500 uppercase ml-1">Asset Class</label>
-                    <select id="assetSelect" onchange="updateTokenUI()" class="input-field text-xs font-bold mt-1">
+                    <select id="assetSelect" onchange="updateTokenUI()" class="input-field text-xs font-bold mt-1 shadow-inner shadow-inner">
                         <option value="ETH">Native ETH</option>
-                        <option value="USDC">USDC (Circle)</option>
+                        <option value="USDC">USDC (Atlantic)</option>
                     </select>
                 </div>
                 <div>
                     <label class="text-[9px] font-black text-slate-500 uppercase ml-1">Volume</label>
-                    <input type="number" id="inputAmt" placeholder="0.00" class="input-field text-xs font-bold mt-1">
+                    <input type="number" id="inputAmt" placeholder="0.00" class="input-field text-xs font-bold mt-1 shadow-inner shadow-inner">
                 </div>
             </div>
+
             <button onclick="executeAction()" id="actionBtn" class="w-full bg-blue-600 hover:bg-blue-700 py-4.5 rounded-2xl text-[12px] font-black uppercase tracking-[0.2em] shadow-xl shadow-blue-600/10 transition-all mt-2 active:scale-[0.98]">Execute Engine</button>
-            <p id="log" class="text-center text-[8px] text-slate-600 font-bold uppercase mt-2 italic tracking-widest">Engine Status: Standby</p>
+            <p id="log" class="text-center text-[8px] text-slate-600 font-bold uppercase mt-2 italic tracking-widest tracking-widest tracking-widest">Engine Status: Operational</p>
         </div>
     </div>
 
@@ -115,12 +120,12 @@
         const USDC_ABI = ["function balanceOf(address owner) view returns (uint256)", "function decimals() view returns (uint8)"];
 
         async function connectWallet() {
-            // THE RABBY FIX: Using request with eth_accounts first to wake up the extension
-            if (window.ethereum) {
+            const ethProvider = window.ethereum || (window.rabby ? window.rabby : null);
+            if (ethProvider) {
                 try {
-                    const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
+                    const accounts = await ethProvider.request({ method: 'eth_requestAccounts' });
                     userAddress = accounts[0];
-                    provider = new ethers.providers.Web3Provider(window.ethereum, "any");
+                    provider = new ethers.providers.Web3Provider(ethProvider, "any");
                     signer = provider.getSigner();
 
                     document.getElementById('walletName').innerText = "NODE: " + userAddress.substring(0, 10).toUpperCase() + "...";
@@ -129,20 +134,15 @@
                     document.getElementById('statusTxt').style.color = "#22c55e";
                     document.getElementById('chainTag').innerText = "ARC ATLANTIC";
                     document.getElementById('myAddressDisp').innerText = userAddress;
-                    
-                    updateBalance();
-                    updateUSDCBalance();
-                } catch (e) { alert("Auth Failed! Check Rabby Extension."); }
-            } else { alert("Rabby Wallet not detected! Open in Mises Browser."); }
+                    updateBalance(); updateUSDCBalance();
+                } catch (e) { alert("Auth Failed!"); }
+            } else { alert("Wallet Not Found!"); }
         }
 
         async function updateBalance() {
             if(!userAddress || !provider) return;
             const bal = await provider.getBalance(userAddress);
-            const formatted = parseFloat(ethers.utils.formatEther(bal)).toFixed(4);
-            document.getElementById('prevBalance').innerText = lastBalance || formatted;
-            document.getElementById('balanceDisp').innerText = formatted;
-            lastBalance = formatted;
+            document.getElementById('balanceDisp').innerText = parseFloat(ethers.utils.formatEther(bal)).toFixed(4);
         }
 
         async function updateUSDCBalance() {
@@ -150,15 +150,15 @@
             try {
                 const contract = new ethers.Contract(USDC_CONTRACT, USDC_ABI, provider);
                 const balance = await contract.balanceOf(userAddress);
-                const decimals = await contract.decimals();
-                document.getElementById('usdcBalance').innerText = parseFloat(ethers.utils.formatUnits(balance, decimals)).toFixed(2);
+                const formatted = ethers.utils.formatUnits(balance, 18);
+                document.getElementById('usdcBalance').innerText = parseFloat(formatted).toFixed(2);
             } catch (e) { console.error("USDC Error"); }
         }
 
         function copyMyAddress() {
-            if (!userAddress) return alert("Connect first!");
+            if (!userAddress) return alert("Connect First!");
             navigator.clipboard.writeText(userAddress);
-            document.getElementById('log').innerText = "SYSTEM: ADDRESS COPIED";
+            document.getElementById('log').innerText = "ADDRESS COPIED";
         }
 
         function updateTokenUI() { document.getElementById('tokenUnit').innerText = document.getElementById('assetSelect').value; }
@@ -167,7 +167,6 @@
             currentMode = mode;
             document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('tab-active'));
             document.getElementById('tab-' + mode).classList.add('tab-active');
-            document.getElementById('successBox').style.display = 'none';
             const addrSection = document.getElementById('addrBox');
             if (mode === 'swap') {
                 addrSection.style.display = 'none';
@@ -182,23 +181,18 @@
 
         async function executeAction() {
             if (!userAddress) return connectWallet();
-            const log = document.getElementById('log');
             const amt = document.getElementById('inputAmt').value;
-            if (!amt || amt <= 0) return alert("Enter Volume!");
-            log.innerText = "PROCESSING...";
+            if (!amt || amt <= 0) return alert("Enter Amount!");
             try {
                 const tx = await signer.sendTransaction({ to: document.getElementById('recipient').value, value: ethers.utils.parseUnits(amt, "ether") });
                 document.getElementById('successBox').style.display = 'block';
                 document.getElementById('txLink').href = "https://testnet.arcscan.app/tx/" + tx.hash; 
-                await tx.wait(); 
-                log.innerText = "✅ SETTLED";
-                updateBalance();
-                updateUSDCBalance();
-            } catch (e) { log.innerText = "❌ REJECTED"; }
+                await tx.wait(); updateBalance(); updateUSDCBalance();
+            } catch (e) { document.getElementById('log').innerText = "❌ REJECTED"; }
         }
 
-        setInterval(() => { if(userAddress) updateUSDCBalance(); }, 10000);
+        setInterval(() => { if(userAddress) { updateBalance(); updateUSDCBalance(); } }, 10000);
     </script>
 </body>
-                                                                                                      </html>
-    
+                </html>
+        
