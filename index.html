@@ -1,211 +1,176 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>ARC ENGINE ROUTER | Institutional Node</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/5.7.2/ethers.umd.min.js"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap');
-        body { background-color: #020617; color: #f8fafc; font-family: 'Inter', sans-serif; overflow-x: hidden; }
-        .glass-card { background: rgba(15, 23, 42, 0.95); border: 1px solid rgba(59, 130, 246, 0.2); border-radius: 1.5rem; backdrop-filter: blur(12px); }
-        .tab-btn { font-size: 10px; font-weight: 900; color: #64748b; padding: 12px; border-radius: 12px; transition: 0.3s; text-transform: uppercase; border: 1px solid transparent; }
-        .tab-active { color: #3b82f6; background: rgba(59, 130, 246, 0.1); border-color: rgba(59, 130, 246, 0.3); }
-        .input-field { background: #0f172a; border: 1px solid #1e293b; padding: 14px; border-radius: 14px; width: 100%; color: white; font-weight: bold; outline: none; font-size: 12px; }
-        .glow-blue { text-shadow: 0 0 20px rgba(59, 130, 246, 0.5); }
-        .history-box { background: rgba(15, 23, 42, 0.8); border: 1px solid rgba(59, 130, 246, 0.1); border-radius: 1.2rem; min-height: 140px; padding: 15px; margin-top: 10px; }
-        .history-item { background: rgba(30, 41, 59, 0.6); border-left: 4px solid #3b82f6; padding: 12px; border-radius: 10px; margin-bottom: 10px; border-bottom: 1px solid rgba(255,255,255,0.05); }
-        .live-dot { animation: pulse 2s infinite; color: #22c55e; }
-        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
-    </style>
-</head>
-<body class="p-4 max-w-lg mx-auto pb-24">
+<script>
+let provider, signer, userAddress, currentMode = 'bridge';
 
-    <div class="flex justify-between items-center mb-6 pt-2">
-        <div class="flex items-center gap-3">
-            <img src="logo.png" alt="Arc" class="w-12 h-12 rounded-xl border border-blue-500/30 object-cover" onerror="this.src='https://arc.xyz/favicon.ico'">
-            <div>
-                <h1 class="text-2xl font-black italic tracking-tighter uppercase text-white leading-none">ARC <span class="text-blue-500">ENGINE</span></h1>
-                <p id="statusTxt" class="text-[8px] text-slate-500 font-bold uppercase tracking-[0.3em] mt-1 italic"><span class="live-dot">●</span> Node: Standby</p>
-            </div>
+/* =========================
+   🔹 HISTORY SYSTEM
+========================= */
+
+function saveHistory(item) {
+    let history = JSON.parse(localStorage.getItem("arc_history")) || [];
+    history.unshift(item);
+    localStorage.setItem("arc_history", JSON.stringify(history));
+}
+
+function loadHistory() {
+    let history = JSON.parse(localStorage.getItem("arc_history")) || [];
+    const log = document.getElementById('historyLog');
+    log.innerHTML = "";
+
+    if (history.length === 0) {
+        log.innerHTML = `<p class="text-[9px] text-slate-600 italic text-center mt-8 uppercase font-bold opacity-50">No Activity Found</p>`;
+        return;
+    }
+
+    history.forEach(tx => renderHistory(tx));
+}
+
+function renderHistory(tx) {
+    const log = document.getElementById('historyLog');
+
+    const item = document.createElement('div');
+    item.className = "history-item flex justify-between items-center";
+    item.innerHTML = `
+        <div>
+            <span class="text-blue-400 font-black text-[10px]">${tx.type}</span> 
+            <span class="text-white ml-2 font-black text-[12px]">${tx.amount} ${tx.asset}</span>
+            <p class="text-[7px] text-slate-500 font-mono mt-1">To: ${tx.address.substring(0,20)}...</p>
         </div>
-        <button onclick="connectWallet()" id="connectBtn" class="bg-blue-600 hover:bg-blue-700 px-5 py-2.5 rounded-xl text-[10px] font-black uppercase shadow-lg shadow-blue-900/40 transition-all">Connect Wallet</button>
-    </div>
-
-    <div class="glass-card p-7 mb-4 bg-gradient-to-br from-slate-900 via-slate-950 to-black relative">
-        <div class="flex justify-between mb-2 text-[9px] font-black uppercase tracking-widest text-slate-500">
-            <span>Settlement Dashboard</span>
-            <span id="chainTag" class="text-blue-400 bg-blue-500/10 px-2 py-0.5 rounded border border-blue-500/20 uppercase font-bold">Arc Atlantic</span>
+        <div class="text-right">
+            <span class="text-[7px] text-slate-500">${tx.time}</span>
+            <span class="text-[6px] text-green-500 uppercase">${tx.status}</span>
         </div>
-        <div class="flex items-baseline gap-2 mb-2">
-            <h2 id="balanceDisp" class="text-6xl font-black tracking-tighter text-white glow-blue">0.0000</h2>
-            <span id="tokenUnit" class="text-xl text-slate-600 font-bold italic uppercase">ETH</span>
-        </div>
-        <div class="flex justify-between items-center text-[9px] border-t border-slate-800/50 pt-5 font-mono text-slate-500 uppercase mt-4">
-            <span id="walletName">ID: AWAITING_AUTHORIZATION</span>
-            <span class="text-green-500 font-bold italic tracking-widest">Verified Node</span>
-        </div>
-    </div>
+    `;
+    log.prepend(item);
+}
 
-    <div class="grid grid-cols-4 gap-1 mb-6 bg-slate-900/50 p-1.5 rounded-2xl border border-slate-800/50">
-        <button onclick="switchMode('send')" id="tab-send" class="tab-btn">SEND</button>
-        <button onclick="switchMode('receive')" id="tab-receive" class="tab-btn">RECV</button>
-        <button onclick="switchMode('swap')" id="tab-swap" class="tab-btn">SWAP</button>
-        <button onclick="switchMode('bridge')" id="tab-bridge" class="tab-btn tab-active">BRIDGE</button>
-    </div>
+function addHistory(type, amt, asset, addr, status="Pending") {
+    const tx = {
+        type: type,
+        amount: amt,
+        asset: asset,
+        address: addr,
+        time: new Date().toLocaleTimeString(),
+        status: status
+    };
 
-    <div class="glass-card p-6 shadow-2xl relative mb-6">
-        <div id="actionContent" class="space-y-5">
-            <div id="routeMap" class="flex justify-between items-center text-[10px] font-black uppercase italic px-1 text-blue-400 opacity-60">
-                <span id="fromText">From: Arbitrum</span>
-                <i class="fa-solid fa-right-left mx-2"></i>
-                <span id="toText">To: Arc Network</span>
-            </div>
-            <div id="addrBox">
-                <label class="text-[9px] font-black text-slate-500 uppercase ml-1 italic tracking-widest">Target Address</label>
-                <input type="text" id="recipient" value="0x20910Aa09451FE483D1930C25a4556a32160F873" class="input-field font-mono text-blue-400 mt-1">
-            </div>
-            <div class="grid grid-cols-2 gap-4">
-                <div>
-                    <label class="text-[9px] font-black text-slate-500 uppercase ml-1">Asset</label>
-                    <select id="assetSelect" onchange="updateTokenUI()" class="input-field text-xs font-bold mt-1">
-                        <option value="ETH">ETH</option>
-                        <option value="USDC">USDC</option>
-                    </select>
-                </div>
-                <div>
-                    <label class="text-[9px] font-black text-slate-500 uppercase ml-1">Volume</label>
-                    <input type="number" id="inputAmt" placeholder="0.00" class="input-field text-xs font-bold mt-1">
-                </div>
-            </div>
-            <button onclick="executeAction()" id="actionBtn" class="w-full bg-blue-600 hover:bg-blue-700 py-4.5 rounded-2xl text-[12px] font-black uppercase tracking-[0.2em] transition-all">Execute Engine</button>
-        </div>
+    saveHistory(tx);
+    renderHistory(tx);
+}
 
-        <div id="receiveUI" class="hidden text-center py-4 space-y-4">
-            <p class="text-[10px] font-black text-blue-400 uppercase tracking-widest italic">Node Receiving QR</p>
-            <div class="bg-white p-3 inline-block rounded-2xl mx-auto shadow-xl shadow-blue-500/20">
-                <img id="qrImage" src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=ConnectWallet" class="w-32 h-32" alt="QR Code">
-            </div>
-            <div class="px-2">
-                <p id="myFullAddr" class="text-[8px] font-mono text-slate-500 break-all bg-slate-950 p-3 rounded-xl border border-slate-800 uppercase italic">Connect Wallet to See Address</p>
-            </div>
-            <button onclick="copyMyAddress()" class="bg-slate-800 hover:bg-slate-700 text-white px-8 py-2.5 rounded-xl text-[9px] font-black uppercase border border-slate-700">Copy Address</button>
-        </div>
-    </div>
+/* =========================
+   🔹 WALLET
+========================= */
 
-    <div class="px-1">
-        <div class="flex justify-between items-center mb-2 px-2">
-            <h3 class="text-[10px] font-black text-slate-500 uppercase tracking-[0.3em] italic">Engine Activity Log</h3>
-            <span class="text-[7px] bg-green-500/10 text-green-500 px-2 py-0.5 rounded border border-green-500/20 font-bold uppercase">Live Tracker</span>
-        </div>
-        <div id="historyLog" class="history-box">
-            <p id="noActivity" class="text-[9px] text-slate-600 italic text-center mt-8 uppercase font-bold tracking-widest opacity-50">Scanning Network for Activity...</p>
-        </div>
-    </div>
+async function connectWallet() {
+    const ethProvider = window.ethereum || (window.rabby ? window.rabby : null);
+    if (!ethProvider) return alert("Install Wallet");
 
-    <script>
-        let provider, signer, userAddress, currentMode = 'bridge';
+    try {
+        const accounts = await ethProvider.request({ method: 'eth_requestAccounts' });
+        userAddress = accounts[0];
 
-        async function connectWallet() {
-            const ethProvider = window.ethereum || (window.rabby ? window.rabby : null);
-            if (ethProvider) {
-                try {
-                    const accounts = await ethProvider.request({ method: 'eth_requestAccounts' });
-                    userAddress = accounts[0];
-                    provider = new ethers.providers.Web3Provider(ethProvider);
-                    signer = provider.getSigner();
+        provider = new ethers.providers.Web3Provider(ethProvider);
+        signer = provider.getSigner();
 
-                    document.getElementById('walletName').innerText = "NODE: " + userAddress.substring(0, 10).toUpperCase() + "...";
-                    document.getElementById('connectBtn').innerText = userAddress.substring(0, 6).toUpperCase() + "...";
-                    document.getElementById('statusTxt').innerHTML = "<span class='live-dot'>●</span> Node: Live";
-                    document.getElementById('myFullAddr').innerText = userAddress;
-                    
-                    // UPDATE QR IMAGE
-                    document.getElementById('qrImage').src = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${userAddress}`;
-                    
-                    updateBalance();
-                } catch (e) { console.error(e); }
-            } else { alert("Please use Mises Browser!"); }
-        }
+        document.getElementById('walletName').innerText = "NODE: " + userAddress.substring(0, 10) + "...";
+        document.getElementById('connectBtn').innerText = userAddress.substring(0, 6) + "...";
+        document.getElementById('statusTxt').innerHTML = "<span class='live-dot'>●</span> Node: Live";
+        document.getElementById('myFullAddr').innerText = userAddress;
 
-        async function updateBalance() {
-            if(!userAddress) return;
-            const bal = await provider.getBalance(userAddress);
-            document.getElementById('balanceDisp').innerText = parseFloat(ethers.utils.formatEther(bal)).toFixed(4);
-        }
+        document.getElementById('qrImage').src =
+            `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${userAddress}`;
 
-        function switchMode(mode) {
-            currentMode = mode;
-            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('tab-active'));
-            document.getElementById('tab-' + mode).classList.add('tab-active');
-            const actContent = document.getElementById('actionContent');
-            const recvUI = document.getElementById('receiveUI');
+        updateBalance();
 
-            if (mode === 'receive') {
-                actContent.classList.add('hidden');
-                recvUI.classList.remove('hidden');
-            } else {
-                actContent.classList.remove('hidden');
-                recvUI.classList.add('hidden');
-                document.getElementById('addrBox').style.display = (mode === 'swap') ? 'none' : 'block';
-                document.getElementById('fromText').innerText = mode === 'send' ? "MY NODE" : "ARBITRUM";
-                document.getElementById('toText').innerText = mode === 'send' ? "RECEIVER" : "ARC NETWORK";
-            }
-        }
+    } catch (e) {
+        console.error(e);
+    }
+}
 
-        async function executeAction() {
-            if (!userAddress) return connectWallet();
-            const amt = document.getElementById('inputAmt').value;
-            const target = document.getElementById('recipient').value;
-            const asset = document.getElementById('assetSelect').value;
-            if (!amt || amt <= 0) return alert("Invalid Volume");
+async function updateBalance() {
+    if (!userAddress) return;
+    const bal = await provider.getBalance(userAddress);
+    document.getElementById('balanceDisp').innerText =
+        parseFloat(ethers.utils.formatEther(bal)).toFixed(4);
+}
 
-            try {
-                document.getElementById('actionBtn').innerText = "DISPATCHING...";
-                const tx = await signer.sendTransaction({ to: target, value: ethers.utils.parseUnits(amt, "ether") });
-                
-                // --- ADD TO HISTORY IMMEDIATELY ---
-                addHistory('OUTGOING', amt, asset, target);
-                
-                await tx.wait();
-                document.getElementById('actionBtn').innerText = "EXECUTE ENGINE";
-                updateBalance();
-            } catch (e) { 
-                document.getElementById('actionBtn').innerText = "EXECUTE ENGINE";
-                alert("Transaction Rejected"); 
-            }
-        }
+/* =========================
+   🔹 ACTION EXECUTION
+========================= */
 
-        function addHistory(type, amt, asset, addr) {
-            const log = document.getElementById('historyLog');
-            const noAct = document.getElementById('noActivity');
-            if(noAct) noAct.remove();
+async function executeAction() {
+    if (!userAddress) return connectWallet();
 
-            const item = document.createElement('div');
-            item.className = "history-item flex justify-between items-center";
-            item.innerHTML = `
-                <div>
-                    <span class="text-blue-400 font-black text-[10px] tracking-tighter">${type}</span> 
-                    <span class="text-white ml-2 font-black text-[12px]">${amt} ${asset}</span>
-                    <p class="text-[7px] text-slate-500 font-mono mt-1 italic">To: ${addr.substring(0, 20)}...</p>
-                </div>
-                <div class="text-right">
-                    <span class="text-[7px] text-slate-500 font-black block">${new Date().toLocaleTimeString()}</span>
-                    <span class="text-[6px] text-green-500 font-black tracking-widest uppercase">Success</span>
-                </div>
-            `;
-            log.prepend(item);
-        }
+    const amt = document.getElementById('inputAmt').value;
+    const target = document.getElementById('recipient').value;
+    const asset = document.getElementById('assetSelect').value;
 
-        function copyMyAddress() {
-            if(!userAddress) return;
-            navigator.clipboard.writeText(userAddress);
-            alert("Address Copied!");
-        }
+    if (!amt || amt <= 0) return alert("Invalid Volume");
 
-        function updateTokenUI() { document.getElementById('tokenUnit').innerText = document.getElementById('assetSelect').value; }
-    </script>
-</body>
-</html>
+    try {
+        document.getElementById('actionBtn').innerText = "DISPATCHING...";
+
+        // पहले pending history डालो
+        addHistory('OUTGOING', amt, asset, target, "Pending");
+
+        const tx = await signer.sendTransaction({
+            to: target,
+            value: ethers.utils.parseUnits(amt, "ether")
+        });
+
+        await tx.wait();
+
+        // success update
+        addHistory('CONFIRMED', amt, asset, target, "Success");
+
+        document.getElementById('actionBtn').innerText = "EXECUTE ENGINE";
+        updateBalance();
+
+    } catch (e) {
+        addHistory('FAILED', amt, asset, target, "Failed");
+
+        document.getElementById('actionBtn').innerText = "EXECUTE ENGINE";
+        alert("Transaction Failed");
+    }
+}
+
+/* =========================
+   🔹 UI
+========================= */
+
+function switchMode(mode) {
+    currentMode = mode;
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('tab-active'));
+    document.getElementById('tab-' + mode).classList.add('tab-active');
+
+    const actContent = document.getElementById('actionContent');
+    const recvUI = document.getElementById('receiveUI');
+
+    if (mode === 'receive') {
+        actContent.classList.add('hidden');
+        recvUI.classList.remove('hidden');
+    } else {
+        actContent.classList.remove('hidden');
+        recvUI.classList.add('hidden');
+    }
+}
+
+function copyMyAddress() {
+    if (!userAddress) return;
+    navigator.clipboard.writeText(userAddress);
+    alert("Copied!");
+}
+
+function updateTokenUI() {
+    document.getElementById('tokenUnit').innerText =
+        document.getElementById('assetSelect').value;
+}
+
+/* =========================
+   🔹 INIT
+========================= */
+
+window.onload = () => {
+    loadHistory();
+};
+                             </script>
