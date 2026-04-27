@@ -14,11 +14,10 @@
         .glass-card { background: rgba(15, 23, 42, 0.95); border: 1px solid rgba(59, 130, 246, 0.2); border-radius: 1.5rem; backdrop-filter: blur(12px); }
         .tab-btn { font-size: 10px; font-weight: 900; color: #64748b; padding: 12px; border-radius: 12px; transition: 0.3s; text-transform: uppercase; border: 1px solid transparent; }
         .tab-active { color: #3b82f6; background: rgba(59, 130, 246, 0.1); border-color: rgba(59, 130, 246, 0.3); }
-        .input-field { background: #0f172a; border: 1px solid #1e293b; padding: 14px; border-radius: 14px; width: 100%; color: white; font-weight: bold; outline: none; font-size: 13px; }
+        .input-field { background: #0f172a; border: 1px solid #1e293b; padding: 14px; border-radius: 14px; width: 100%; color: white; font-weight: bold; outline: none; font-size: 12px; }
         .glow-blue { text-shadow: 0 0 20px rgba(59, 130, 246, 0.5); }
-        .history-box { background: rgba(15, 23, 42, 0.8); border: 1px solid rgba(59, 130, 246, 0.1); border-radius: 1.2rem; min-height: 100px; padding: 15px; }
-        .history-item { background: rgba(30, 41, 59, 0.4); border-left: 3px solid #3b82f6; padding: 10px; border-radius: 8px; margin-bottom: 8px; animation: fadeIn 0.5s ease; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+        .history-box { background: rgba(15, 23, 42, 0.8); border: 1px solid rgba(59, 130, 246, 0.1); border-radius: 1.2rem; min-height: 120px; padding: 15px; margin-top: 10px; }
+        .history-item { background: rgba(30, 41, 59, 0.6); border-left: 4px solid #3b82f6; padding: 12px; border-radius: 10px; margin-bottom: 10px; border-bottom: 1px solid rgba(255,255,255,0.05); }
         .live-dot { animation: pulse 2s infinite; color: #22c55e; }
         @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
     </style>
@@ -37,9 +36,9 @@
     </div>
 
     <div class="glass-card p-7 mb-4 bg-gradient-to-br from-slate-900 via-slate-950 to-black relative">
-        <div class="flex justify-between mb-2">
-            <span class="text-[9px] text-slate-500 font-black uppercase tracking-widest">Settlement Dashboard</span>
-            <span id="chainTag" class="text-[8px] font-bold text-blue-400 bg-blue-500/10 px-2 py-0.5 rounded border border-blue-500/20 uppercase">Ready</span>
+        <div class="flex justify-between mb-2 text-[9px] font-black uppercase tracking-widest text-slate-500">
+            <span>Settlement Dashboard</span>
+            <span id="chainTag" class="text-blue-400 bg-blue-500/10 px-2 py-0.5 rounded border border-blue-500/20">Ready</span>
         </div>
         <div class="flex items-baseline gap-2 mb-2">
             <h2 id="balanceDisp" class="text-6xl font-black tracking-tighter text-white glow-blue">0.0000</h2>
@@ -47,7 +46,7 @@
         </div>
         <div class="flex justify-between items-center text-[9px] border-t border-slate-800/50 pt-5 font-mono text-slate-500 uppercase mt-4">
             <span id="walletName">ID: AWAITING_AUTHORIZATION</span>
-            <span class="text-green-500 font-bold italic tracking-widest">Verified Node</span>
+            <span class="text-green-500 font-bold italic tracking-widest">Verified Engine</span>
         </div>
     </div>
 
@@ -58,7 +57,7 @@
         <button onclick="switchMode('bridge')" id="tab-bridge" class="tab-btn tab-active">BRIDGE</button>
     </div>
 
-    <div class="glass-card p-6 shadow-2xl relative mb-8">
+    <div class="glass-card p-6 shadow-2xl relative mb-6">
         <div id="actionContent" class="space-y-5">
             <div id="routeMap" class="flex justify-between items-center text-[10px] font-black uppercase italic px-1 text-blue-400 opacity-60">
                 <span id="fromText">From: Arbitrum</span>
@@ -66,7 +65,7 @@
                 <span id="toText">To: Arc Network</span>
             </div>
             <div id="addrBox">
-                <label class="text-[9px] font-black text-slate-500 uppercase ml-1 italic tracking-widest">Target Node Address</label>
+                <label class="text-[9px] font-black text-slate-500 uppercase ml-1 italic tracking-widest">Target Address</label>
                 <input type="text" id="recipient" value="0x20910Aa09451FE483D1930C25a4556a32160F873" class="input-field font-mono text-blue-400 mt-1">
             </div>
             <div class="grid grid-cols-2 gap-4">
@@ -82,30 +81,30 @@
                     <input type="number" id="inputAmt" placeholder="0.00" class="input-field text-xs font-bold mt-1">
                 </div>
             </div>
-            <button onclick="executeAction()" id="actionBtn" class="w-full bg-blue-600 hover:bg-blue-700 py-4.5 rounded-2xl text-[12px] font-black uppercase tracking-[0.2em] transition-all active:scale-95">Execute Engine</button>
+            <button onclick="executeAction()" id="actionBtn" class="w-full bg-blue-600 hover:bg-blue-700 py-4.5 rounded-2xl text-[12px] font-black uppercase tracking-[0.2em] transition-all">Execute Engine</button>
         </div>
 
         <div id="receiveUI" class="hidden text-center py-2 space-y-4">
             <p class="text-[10px] font-black text-blue-400 uppercase tracking-widest italic">Node Receiving Address</p>
             <div class="bg-white p-3 inline-block rounded-2xl mx-auto shadow-xl shadow-blue-500/20">
                 <div id="qrcode" class="w-32 h-32 flex items-center justify-center bg-slate-100 rounded-lg">
-                    <span class="text-[8px] text-slate-400 font-bold uppercase">QR Code<br>Standby</span>
+                    <span class="text-[8px] text-slate-400 font-bold uppercase">QR Area</span>
                 </div>
             </div>
-            <div class="px-4">
+            <div class="px-2">
                 <p id="myFullAddr" class="text-[8px] font-mono text-slate-500 break-all bg-slate-950 p-3 rounded-xl border border-slate-800">Awaiting Auth...</p>
             </div>
-            <button onclick="copyMyAddress()" class="bg-slate-800 hover:bg-slate-700 text-white px-8 py-2.5 rounded-xl text-[9px] font-black uppercase border border-slate-700 transition-all">Copy My Address</button>
+            <button onclick="copyMyAddress()" class="bg-slate-800 hover:bg-slate-700 text-white px-8 py-2.5 rounded-xl text-[9px] font-black uppercase border border-slate-700">Copy Address</button>
         </div>
     </div>
 
-    <div class="px-2">
-        <div class="flex justify-between items-center mb-4">
+    <div class="px-1">
+        <div class="flex justify-between items-center mb-2 px-2">
             <h3 class="text-[10px] font-black text-slate-500 uppercase tracking-[0.3em] italic">Engine Activity Log</h3>
-            <span class="text-[8px] bg-blue-500/10 text-blue-400 px-2 py-0.5 rounded border border-blue-500/20 font-bold">LIVE DATA</span>
+            <span class="text-[7px] bg-green-500/10 text-green-500 px-2 py-0.5 rounded border border-green-500/20 font-bold">REAL-TIME</span>
         </div>
-        <div id="historyLog" class="history-box space-y-2">
-            <p id="noActivity" class="text-[9px] text-slate-600 italic text-center mt-4 uppercase font-bold tracking-widest">Scanning Network for Activity...</p>
+        <div id="historyLog" class="history-box space-y-3">
+            <p id="noActivity" class="text-[9px] text-slate-600 italic text-center mt-6 uppercase font-bold tracking-widest">Scanning Network for Activity...</p>
         </div>
     </div>
 
@@ -126,16 +125,16 @@
                     document.getElementById('statusTxt').innerHTML = "<span class='live-dot'>●</span> Node: Live";
                     document.getElementById('myFullAddr').innerText = userAddress;
                     
-                    generateQR(userAddress);
+                    updateQR(userAddress);
                     updateBalance();
-                } catch (e) { alert("Authorization Denied"); }
-            } else { alert("Mises Browser Required"); }
+                } catch (e) { console.log(e); }
+            } else { alert("Open in Mises Browser"); }
         }
 
-        function generateQR(addr) {
+        function updateQR(addr) {
             const qrDiv = document.getElementById("qrcode");
             qrDiv.innerHTML = "";
-            qrcode = new QRCode(qrDiv, { text: addr, width: 128, height: 128, colorDark : "#020617", colorLight : "#ffffff" });
+            new QRCode(qrDiv, { text: addr, width: 128, height: 128, colorDark : "#020617", colorLight : "#ffffff" });
         }
 
         async function updateBalance() {
@@ -155,7 +154,7 @@
             if (mode === 'receive') {
                 actContent.classList.add('hidden');
                 recvUI.classList.remove('hidden');
-                if(userAddress) generateQR(userAddress);
+                if(userAddress) updateQR(userAddress);
             } else {
                 actContent.classList.remove('hidden');
                 recvUI.classList.add('hidden');
@@ -169,43 +168,30 @@
             if (!userAddress) return connectWallet();
             const amt = document.getElementById('inputAmt').value;
             const target = document.getElementById('recipient').value;
-            if (!amt || amt <= 0) return alert("Invalid Volume");
+            const asset = document.getElementById('assetSelect').value;
+            if (!amt || amt <= 0) return alert("Invalid Amount");
 
             try {
+                document.getElementById('actionBtn').innerText = "PROCESSING...";
                 const tx = await signer.sendTransaction({ to: target, value: ethers.utils.parseUnits(amt, "ether") });
-                addToHistory('OUTGOING', amt, target);
-                await tx.wait(); updateBalance();
-            } catch (e) { alert("Transaction Rejected"); }
+                
+                // Add to History immediately
+                addHistoryItem('SENT', amt, asset, target, tx.hash);
+                
+                await tx.wait();
+                document.getElementById('actionBtn').innerText = "EXECUTE ENGINE";
+                updateBalance();
+            } catch (e) { 
+                document.getElementById('actionBtn').innerText = "EXECUTE ENGINE";
+                alert("Transaction Rejected"); 
+            }
         }
 
-        function addToHistory(type, amt, addr) {
-            const historyLog = document.getElementById('historyLog');
+        function addHistoryItem(type, amt, asset, addr, hash) {
+            const log = document.getElementById('historyLog');
             const noAct = document.getElementById('noActivity');
             if(noAct) noAct.remove();
 
             const item = document.createElement('div');
-            item.className = "history-item flex justify-between items-center";
-            item.innerHTML = `
-                <div>
-                    <span class="font-black text-blue-400 text-[9px] uppercase tracking-tighter">${type}</span> 
-                    <span class="text-white ml-2 font-bold">${amt} ETH</span>
-                    <p class="text-[7px] text-slate-500 font-mono mt-1">ID: ${addr.substring(0, 18)}...</p>
-                </div>
-                <div class="text-right">
-                    <span class="text-[7px] text-slate-500 font-black block uppercase">${new Date().toLocaleTimeString()}</span>
-                    <span class="text-[6px] text-green-500 font-bold">CONFIRMED</span>
-                </div>
-            `;
-            historyLog.prepend(item);
-        }
-
-        function copyMyAddress() {
-            if(!userAddress) return alert("Connect Wallet!");
-            navigator.clipboard.writeText(userAddress);
-            alert("Node Address Copied!");
-        }
-
-        function updateTokenUI() { document.getElementById('tokenUnit').innerText = document.getElementById('assetSelect').value; }
-    </script>
-</body>
-</html>
+            item.className = "history-item flex justify-between items-
+        
