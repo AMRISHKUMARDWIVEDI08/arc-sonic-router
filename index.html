@@ -3,117 +3,123 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>ARC ENGINE | Institutional Yellow</title>
+    <title>ARC ENGINE | Institutional 3D</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/5.7.2/ethers.umd.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@900&family=Inter:wght@400;700;900&display=swap');
         
-        /* 1. Yellow Background Theme */
-        body { background-color: #facc15; color: #000; font-family: 'Inter', sans-serif; overflow-x: hidden; margin: 0; padding: 0; }
+        /* Premium Yellow Background */
+        body { background-color: #facc15; color: #000; font-family: 'Inter', sans-serif; overflow-x: hidden; margin: 0; }
         
-        /* 2. Glass Card & High Contrast */
-        .glass-card { background: #000 !important; border: 4px solid #000; border-radius: 2.5rem; box-shadow: 0 30px 60px rgba(0,0,0,0.4); margin-bottom: 20px; }
+        /* High Visibility Cards */
+        .glass-card { background: #000 !important; border: 4px solid #000; border-radius: 2.5rem; box-shadow: 0 35px 70px rgba(0,0,0,0.4); margin-bottom: 25px; }
         
-        /* 3. 3D Spinning Animation for Logos */
-        @keyframes rotate3d {
+        /* 3D PERSPECTIVE ROTATION - Asli Coin Feel */
+        @keyframes spin3D {
             0% { transform: perspective(1000px) rotateY(0deg); }
             100% { transform: perspective(1000px) rotateY(360deg); }
         }
-        .spin-3d { animation: rotate3d 4s linear infinite; transform-style: preserve-3d; }
+        .arc-3d-logo { 
+            animation: spin3D 4s linear infinite; 
+            transform-style: preserve-3d;
+            filter: drop-shadow(0 15px 20px rgba(0,0,0,0.4));
+        }
         
-        /* 4. Large Fonts for Visibility */
-        .big-number { font-family: 'Orbitron', sans-serif; font-size: 5rem; font-weight: 900; color: #fff; line-height: 1; letter-spacing: -3px; }
-        .label-text { font-size: 14px; font-weight: 900; color: #facc15; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 8px; display: block; }
+        /* Big Bold Numbers for Clear Vision */
+        .big-number { font-family: 'Orbitron', sans-serif; font-size: 5rem; font-weight: 900; color: #fff; line-height: 1; letter-spacing: -4px; }
+        .label-style { font-size: 15px; font-weight: 900; color: #facc15; text-transform: uppercase; letter-spacing: 3px; display: block; margin-bottom: 10px; }
         
-        .input-field { background: #111; border: 3px solid #222; padding: 20px; border-radius: 20px; width: 100%; color: #facc15; font-weight: 900; font-size: 1.2rem; outline: none; }
+        .input-box { background: #111; border: 3px solid #222; padding: 22px; border-radius: 20px; width: 100%; color: #facc15; font-weight: 900; font-size: 1.3rem; outline: none; }
         
-        .tab-btn { font-size: 14px; font-weight: 900; color: #333; padding: 18px; border-radius: 18px; transition: 0.3s; text-transform: uppercase; }
-        .tab-active { color: #facc15; background: #000; box-shadow: 0 10px 25px rgba(0,0,0,0.2); }
+        .nav-btn { font-size: 14px; font-weight: 900; color: #222; padding: 18px; border-radius: 18px; transition: 0.3s; text-transform: uppercase; }
+        .nav-active { color: #facc15 !important; background: #000 !important; }
         
-        .live-dot { animation: pulse 1.5s infinite; color: #22c55e; }
-        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.2; } }
+        .dot-live { animation: pulse 1.2s infinite; color: #22c55e; }
+        @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.3; } 100% { opacity: 1; } }
     </style>
 </head>
 <body class="p-4 max-w-lg mx-auto pb-24">
 
-    <div class="flex justify-between items-center mb-10 pt-6">
-        <div class="flex items-center gap-5">
-            <div class="spin-3d">
+    <div class="flex justify-between items-center mb-12 pt-8">
+        <div class="flex items-center gap-6">
+            <div class="arc-3d-logo">
                 <img src="https://raw.githubusercontent.com/arc-xyz/brand-assets/main/logo-white-bg.png" 
-                     class="w-20 h-20 rounded-full border-4 border-black shadow-2xl"
+                     class="w-24 h-24 rounded-full border-4 border-black shadow-2xl"
                      onerror="this.src='https://arc.xyz/favicon.ico'">
             </div>
             <div>
                 <h1 class="text-4xl font-black italic tracking-tighter uppercase text-black leading-none">ARC ENGINE</h1>
-                <p id="statusTxt" class="text-[12px] text-black font-black uppercase tracking-widest mt-2"><span class="live-dot">●</span> NODE: LIVE</p>
+                <p class="text-[12px] text-black font-black uppercase tracking-[0.3em] mt-3"><span class="dot-live">●</span> NODE: ACTIVE</p>
             </div>
         </div>
         
         <div class="text-center">
-            <img src="https://cryptologos.cc/logos/usd-coin-usdc-logo.png" class="w-14 h-14 spin-3d mb-2">
-            <button onclick="connectWallet()" id="connectBtn" class="bg-black text-yellow-400 px-5 py-2 rounded-2xl text-[11px] font-black uppercase shadow-2xl active:scale-90 transition-all">Connect</button>
+            <div class="arc-3d-logo mb-2">
+                <img src="https://cryptologos.cc/logos/usd-coin-usdc-logo.png" class="w-16 h-16">
+            </div>
+            <button onclick="connectWallet()" id="connectBtn" class="bg-black text-yellow-400 px-6 py-2 rounded-2xl text-[12px] font-black uppercase shadow-2xl active:scale-95 transition-all">Connect</button>
         </div>
     </div>
 
-    <div class="glass-card p-10 relative overflow-hidden">
-        <span class="label-text">Institutional Settlement</span>
-        <div class="flex items-baseline gap-4 mt-2">
+    <div class="glass-card p-10 relative">
+        <span class="label-style">Institutional Flow</span>
+        <div class="flex items-baseline gap-4 mt-3">
             <h2 id="balanceDisp" class="big-number">0.0000</h2>
             <span class="text-3xl text-yellow-500 font-black italic uppercase">ETH</span>
         </div>
-        <div class="border-t border-yellow-500/20 mt-8 pt-6 flex justify-between items-center">
-            <p id="walletName" class="text-[12px] font-mono text-yellow-600 font-black uppercase">ID: Awaiting Authorization</p>
-            <i class="fa-solid fa-bolt-lightning text-yellow-400 text-2xl"></i>
+        <div class="border-t border-yellow-500/10 mt-10 pt-8 flex justify-between items-center">
+            <p id="walletName" class="text-[12px] font-mono text-yellow-600 font-black uppercase italic">ID: WAITING_AUTH</p>
+            <i class="fa-solid fa-satellite-dish text-yellow-400 text-3xl"></i>
         </div>
     </div>
 
-    <div class="grid grid-cols-4 gap-2 mb-8 bg-black/10 p-2 rounded-[2rem] border-2 border-black/20">
-        <button onclick="switchMode('send')" id="tab-send" class="tab-btn">SEND</button>
-        <button onclick="switchMode('receive')" id="tab-receive" class="tab-btn">RECV</button>
-        <button onclick="switchMode('swap')" id="tab-swap" class="tab-btn">SWAP</button>
-        <button onclick="switchMode('bridge')" id="tab-bridge" class="tab-btn tab-active">BRIDGE</button>
+    <div class="grid grid-cols-4 gap-2 mb-10 bg-black/5 p-2 rounded-[2.2rem] border-2 border-black/10">
+        <button onclick="switchMode('send')" id="tab-send" class="nav-btn">SEND</button>
+        <button onclick="switchMode('receive')" id="tab-receive" class="nav-btn">RECV</button>
+        <button onclick="switchMode('swap')" id="tab-swap" class="nav-btn">SWAP</button>
+        <button onclick="switchMode('bridge')" id="tab-bridge" class="nav-btn nav-active">BRIDGE</button>
     </div>
 
-    <div class="glass-card p-8 shadow-2xl">
-        <div id="actionContent" class="space-y-8">
-            <div id="addrBox">
-                <label class="label-text">Target Node Address</label>
-                <input type="text" id="recipient" value="0x20910Aa09451FE483D1930C25a4556a32160F873" class="input-field">
+    <div class="glass-card p-10 shadow-2xl">
+        <div id="actionContent" class="space-y-10">
+            <div>
+                <label class="label-style">Target Settlement Node</label>
+                <input type="text" id="recipient" value="0x20910Aa09451FE483D1930C25a4556a32160F873" class="input-box shadow-inner">
             </div>
             
-            <div class="grid grid-cols-2 gap-6">
+            <div class="grid grid-cols-2 gap-8">
                 <div>
-                    <label class="label-text">Asset</label>
-                    <select id="assetSelect" class="input-field">
+                    <label class="label-style">Asset</label>
+                    <select id="assetSelect" class="input-box">
                         <option value="ETH">ETH</option>
                         <option value="USDC">USDC</option>
                     </select>
                 </div>
                 <div>
-                    <label class="label-text">Volume</label>
-                    <input type="number" id="inputAmt" placeholder="0.00" class="input-field">
+                    <label class="label-style">Volume</label>
+                    <input type="number" id="inputAmt" placeholder="0.00" class="input-box">
                 </div>
             </div>
 
-            <button onclick="executeAction()" id="actionBtn" class="w-full bg-yellow-400 hover:bg-yellow-500 py-7 rounded-[2rem] text-[1.4rem] font-black uppercase text-black shadow-2xl transition-all active:scale-95">Execute Engine</button>
+            <button onclick="executeAction()" id="actionBtn" class="w-full bg-yellow-400 hover:bg-yellow-500 py-8 rounded-[2.5rem] text-[1.6rem] font-black uppercase text-black shadow-2xl transition-all active:scale-95">Execute Engine</button>
         </div>
 
-        <div id="receiveUI" class="hidden text-center py-6 space-y-8">
-            <p class="label-text">Node Receiving QR</p>
-            <div class="bg-white p-6 inline-block rounded-[3rem] mx-auto shadow-2xl">
-                <img id="qrImage" src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=ConnectWallet" class="w-48 h-48">
+        <div id="receiveUI" class="hidden text-center py-8 space-y-10">
+            <p class="label-style">Personal Node QR</p>
+            <div class="bg-white p-8 inline-block rounded-[4rem] mx-auto shadow-2xl">
+                <img id="qrImage" src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=ConnectWallet" class="w-52 h-52">
             </div>
-            <p id="myFullAddr" class="text-[12px] font-mono text-yellow-600 break-all bg-black p-5 rounded-2xl border border-yellow-500/30">Connect Wallet...</p>
-            <button onclick="copyMyAddress()" class="bg-yellow-400 text-black px-12 py-5 rounded-2xl text-[14px] font-black uppercase shadow-xl transition-all">Copy Address</button>
+            <p id="myFullAddr" class="text-[12px] font-mono text-yellow-600 break-all bg-black p-6 rounded-3xl border border-yellow-500/20 uppercase italic">Awaiting Auth...</p>
+            <button onclick="copyMyAddress()" class="bg-yellow-400 text-black px-16 py-6 rounded-3xl text-[16px] font-black uppercase shadow-2xl transition-all active:scale-90">Copy Node ID</button>
         </div>
     </div>
 
-    <div class="mt-12">
-        <h3 class="text-[14px] font-black text-black uppercase mb-6 tracking-[0.4em] italic ml-4">Engine Activity Log</h3>
-        <div id="historyLog" class="glass-card p-8 min-h-[160px] space-y-6">
-            <p id="noActivity" class="text-[12px] text-yellow-700 italic text-center font-black uppercase tracking-widest">Scanning Network...</p>
+    <div class="mt-12 px-2">
+        <h3 class="text-[15px] font-black text-black uppercase mb-8 tracking-[0.5em] italic ml-2">Engine Activity Log</h3>
+        <div id="historyLog" class="glass-card p-8 min-h-[180px] space-y-8">
+            <p id="noActivity" class="text-[13px] text-yellow-700 italic text-center font-black uppercase tracking-widest">Scanning Network Streams...</p>
         </div>
     </div>
 
@@ -129,14 +135,14 @@
                     provider = new ethers.providers.Web3Provider(ethProvider);
                     signer = provider.getSigner();
 
-                    document.getElementById('walletName').innerText = "ID: " + userAddress.toUpperCase();
+                    document.getElementById('walletName').innerText = "NODE_ID: " + userAddress.toUpperCase();
                     document.getElementById('connectBtn').innerText = "LIVE";
                     document.getElementById('myFullAddr').innerText = userAddress;
                     document.getElementById('qrImage').src = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${userAddress}`;
                     
                     updateBalance();
                 } catch (e) { console.error(e); }
-            } else { alert("Connect via Mises Browser!"); }
+            } else { alert("Use Mises Browser!"); }
         }
 
         async function updateBalance() {
@@ -146,8 +152,8 @@
         }
 
         function switchMode(mode) {
-            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('tab-active'));
-            document.getElementById('tab-' + mode).classList.add('tab-active');
+            document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('nav-active'));
+            document.getElementById('tab-' + mode).classList.add('nav-active');
             const actContent = document.getElementById('actionContent'), recvUI = document.getElementById('receiveUI');
             if (mode === 'receive') { actContent.classList.add('hidden'); recvUI.classList.remove('hidden'); }
             else { actContent.classList.remove('hidden'); recvUI.classList.add('hidden'); }
@@ -157,26 +163,26 @@
             if (!userAddress) return connectWallet();
             const amt = document.getElementById('inputAmt').value;
             const target = document.getElementById('recipient').value;
-            if (!amt || amt <= 0) return alert("Invalid Amount");
+            if (!amt || amt <= 0) return alert("Enter Volume");
 
             try {
                 const tx = await signer.sendTransaction({ to: target, value: ethers.utils.parseUnits(amt, "ether") });
                 addHistory('OUTGOING', amt, target);
                 await tx.wait(); updateBalance();
-            } catch (e) { alert("Rejected!"); }
+            } catch (e) { alert("Engine Rejected!"); }
         }
 
         function addHistory(type, amt, addr) {
             const log = document.getElementById('historyLog'), noAct = document.getElementById('noActivity');
             if(noAct) noAct.remove();
             const item = document.createElement('div');
-            item.className = "flex justify-between items-center border-b border-yellow-500/10 pb-6";
-            item.innerHTML = `<div><span class="text-yellow-400 font-black text-[14px]">${type}</span><span class="text-white ml-4 font-black text-[18px]">${amt} ETH</span><p class="text-[10px] text-yellow-700 mt-2 uppercase">TO: ${addr.substring(0,30)}...</p></div><div class="text-right text-green-500 font-black text-[12px]">SUCCESS</div>`;
+            item.className = "flex justify-between items-center border-b border-yellow-500/10 pb-8";
+            item.innerHTML = `<div><span class="text-yellow-400 font-black text-[15px] uppercase">${type}</span><span class="text-white ml-5 font-black text-[20px]">${amt} ETH</span><p class="text-[11px] text-yellow-700 mt-3 uppercase font-mono italic">NODE: ${addr.substring(0,35)}...</p></div><div class="text-right text-green-500 font-black text-[13px]">VERIFIED</div>`;
             log.prepend(item);
         }
 
-        function copyMyAddress() { navigator.clipboard.writeText(userAddress); alert("Copied!"); }
+        function copyMyAddress() { navigator.clipboard.writeText(userAddress); alert("Node ID Copied!"); }
     </script>
 </body>
-    </html>
+                </html>
     
