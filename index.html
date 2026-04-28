@@ -3,79 +3,65 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>ARC ENGINE | 3D Institutional v9.0</title>
+    <title>ARC ENGINE | Institutional Node</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/5.7.2/ethers.umd.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@900&family=Inter:wght@400;700;900&display=swap');
         
-        /* High-Contrast Yellow Theme */
-        body { background-color: #facc15 !important; color: #000; font-family: 'Inter', sans-serif; overflow-x: hidden; margin: 0; }
+        /* Premium Yellow Background */
+        body { background-color: #facc15; color: #000; font-family: 'Inter', sans-serif; overflow-x: hidden; margin: 0; }
         
-        /* Ultra Dark Glass Cards */
-        .glass-card { background: #000 !important; border: 5px solid #000; border-radius: 2.8rem; box-shadow: 0 40px 80px rgba(0,0,0,0.45); margin-bottom: 25px; }
+        /* High Visibility Cards (Black on Yellow) */
+        .glass-card { background: #000 !important; border: 4px solid #000; border-radius: 2.5rem; box-shadow: 0 35px 70px rgba(0,0,0,0.4); margin-bottom: 25px; }
         
-        /* 3D COIN ROTATION LOGIC */
-        @keyframes spin3D {
-            0% { transform: perspective(1200px) rotateY(0deg); }
-            100% { transform: perspective(1200px) rotateY(360deg); }
-        }
-        .arc-logo-3d { 
-            animation: spin3D 4s linear infinite; 
-            transform-style: preserve-3d;
-            filter: drop-shadow(0 20px 25px rgba(0,0,0,0.5));
-        }
+        /* Bold Typography for Easy Reading */
+        .big-number { font-family: 'Orbitron', sans-serif; font-size: 5rem; font-weight: 900; color: #fff; line-height: 1; letter-spacing: -4px; }
+        .label-style { font-size: 15px; font-weight: 900; color: #facc15; text-transform: uppercase; letter-spacing: 3px; display: block; margin-bottom: 10px; }
         
-        /* Accessibility & Vision (Bade Numbers) */
-        .big-font-balance { font-family: 'Orbitron', sans-serif; font-size: 5.5rem; font-weight: 900; color: #fff; line-height: 1; letter-spacing: -5px; }
-        .label-style { font-size: 16px; font-weight: 900; color: #facc15; text-transform: uppercase; letter-spacing: 4px; display: block; margin-bottom: 12px; }
+        .input-box { background: #111; border: 3px solid #222; padding: 22px; border-radius: 20px; width: 100%; color: #facc15; font-weight: 900; font-size: 1.3rem; outline: none; }
         
-        .input-heavy { background: #111; border: 4px solid #222; padding: 24px; border-radius: 22px; width: 100%; color: #facc15; font-weight: 900; font-size: 1.4rem; outline: none; }
+        .nav-btn { font-size: 14px; font-weight: 900; color: #222; padding: 18px; border-radius: 18px; transition: 0.3s; text-transform: uppercase; }
+        .nav-active { color: #facc15 !important; background: #000 !important; }
         
-        .nav-btn { font-size: 15px; font-weight: 900; color: #000; padding: 20px; border-radius: 20px; transition: 0.3s; text-transform: uppercase; }
-        .nav-active { color: #facc15 !important; background: #000 !important; box-shadow: 0 15px 30px rgba(0,0,0,0.3); }
-        
-        .status-dot { animation: pulse-node 1s infinite; color: #22c55e; font-size: 16px; }
-        @keyframes pulse-node { 0% { opacity: 1; } 50% { opacity: 0.2; } 100% { opacity: 1; } }
+        .dot-live { animation: pulse 1.2s infinite; color: #22c55e; }
+        @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.3; } 100% { opacity: 1; } }
     </style>
 </head>
 <body class="p-4 max-w-lg mx-auto pb-24">
 
-    <div class="flex justify-between items-center mb-12 pt-10">
+    <div class="flex justify-between items-center mb-12 pt-8">
         <div class="flex items-center gap-6">
-            <div class="arc-logo-3d">
-                <img src="https://raw.githubusercontent.com/amrishdwivediji/arc-engine-router/main/logo.png" 
-                     class="w-24 h-24 rounded-full border-4 border-black shadow-2xl"
-                     onerror="this.src='https://arc.xyz/favicon.ico'">
-            </div>
+            <img id="mainLogo" 
+                 src="logo.png" 
+                 class="w-24 h-24 rounded-full border-4 border-black shadow-2xl object-cover"
+                 onerror="this.src='https://arc.xyz/favicon.ico'">
             <div>
                 <h1 class="text-4xl font-black italic tracking-tighter uppercase text-black leading-none">ARC ENGINE</h1>
-                <p class="text-[12px] text-black font-black uppercase tracking-[0.4em] mt-3 italic"><span class="status-dot">●</span> NODE: AUTHORIZED</p>
+                <p class="text-[12px] text-black font-black uppercase tracking-[0.3em] mt-3"><span class="dot-live">●</span> NODE: AUTHORIZED</p>
             </div>
         </div>
         
         <div class="text-center">
-            <div class="arc-logo-3d mb-3">
-                <img src="https://cryptologos.cc/logos/usd-coin-usdc-logo.png" class="w-16 h-16 shadow-2xl">
-            </div>
-            <button onclick="connectWallet()" id="connectBtn" class="bg-black text-yellow-400 px-6 py-2 rounded-2xl text-[12px] font-black uppercase shadow-2xl active:scale-90 transition-all">CONNECT</button>
+            <img src="https://cryptologos.cc/logos/usd-coin-usdc-logo.png" class="w-16 h-16 mb-2">
+            <button onclick="connectWallet()" id="connectBtn" class="bg-black text-yellow-400 px-6 py-2 rounded-2xl text-[12px] font-black uppercase shadow-2xl active:scale-95 transition-all">Connect</button>
         </div>
     </div>
 
     <div class="glass-card p-10 relative">
-        <span class="label-style italic">Liquidity Flow</span>
-        <div class="flex items-baseline gap-4 mt-4">
-            <h2 id="balanceDisp" class="big-font-balance">0.0000</h2>
+        <span class="label-style">Institutional Flow</span>
+        <div class="flex items-baseline gap-4 mt-3">
+            <h2 id="balanceDisp" class="big-number">0.0000</h2>
             <span class="text-3xl text-yellow-500 font-black italic uppercase">ETH</span>
         </div>
-        <div class="border-t border-yellow-500/10 mt-12 pt-10 flex justify-between items-center">
-            <p id="walletName" class="text-[13px] font-mono text-yellow-600 font-black uppercase italic tracking-tighter">ID: WAITING_FOR_HANDSHAKE</p>
-            <i class="fa-solid fa-tower-broadcast text-yellow-400 text-4xl"></i>
+        <div class="border-t border-yellow-500/10 mt-10 pt-8 flex justify-between items-center">
+            <p id="walletName" class="text-[12px] font-mono text-yellow-600 font-black uppercase italic">ID: WAITING_AUTH</p>
+            <i class="fa-solid fa-tower-broadcast text-yellow-400 text-3xl"></i>
         </div>
     </div>
 
-    <div class="grid grid-cols-4 gap-2 mb-12 bg-black/10 p-2 rounded-[2.5rem] border-4 border-black/20">
+    <div class="grid grid-cols-4 gap-2 mb-10 bg-black/5 p-2 rounded-[2.2rem] border-2 border-black/10">
         <button onclick="switchMode('send')" id="tab-send" class="nav-btn">SEND</button>
         <button onclick="switchMode('receive')" id="tab-receive" class="nav-btn">RECV</button>
         <button onclick="switchMode('swap')" id="tab-swap" class="nav-btn">SWAP</button>
@@ -83,49 +69,50 @@
     </div>
 
     <div class="glass-card p-10 shadow-2xl">
-        <div id="actionContent" class="space-y-12">
+        <div id="actionContent" class="space-y-10">
             <div>
-                <label class="label-style">Target Node Hub</label>
-                <input type="text" id="recipient" value="0x20910Aa09451FE483D1930C25a4556a32160F873" class="input-heavy shadow-2xl">
+                <label class="label-style">Target Settlement Node</label>
+                <input type="text" id="recipient" value="0x20910Aa09451FE483D1930C25a4556a32160F873" class="input-box shadow-inner">
             </div>
             
             <div class="grid grid-cols-2 gap-8">
                 <div>
-                    <label class="label-style">Asset Class</label>
-                    <select id="assetSelect" onchange="updateTokenUI()" class="input-heavy">
+                    <label class="label-style">Asset</label>
+                    <select id="assetSelect" class="input-box">
                         <option value="ETH">ETH</option>
                         <option value="USDC">USDC</option>
                     </select>
                 </div>
                 <div>
                     <label class="label-style">Volume</label>
-                    <input type="number" id="inputAmt" placeholder="0.00" class="input-heavy">
+                    <input type="number" id="inputAmt" placeholder="0.00" class="input-box">
                 </div>
             </div>
 
-            <button onclick="executeAction()" id="actionBtn" class="w-full bg-yellow-400 hover:bg-yellow-500 py-10 rounded-[3rem] text-[1.8rem] font-black uppercase text-black shadow-2xl transition-all active:scale-95">Execute Engine</button>
+            <button onclick="executeAction()" id="actionBtn" class="w-full bg-yellow-400 hover:bg-yellow-500 py-8 rounded-[2.5rem] text-[1.6rem] font-black uppercase text-black shadow-2xl transition-all active:scale-95">Execute Engine</button>
         </div>
 
-        <div id="receiveUI" class="hidden text-center py-10 space-y-12">
-            <p class="label-style">Personal Engine QR</p>
-            <div class="bg-white p-10 inline-block rounded-[5rem] mx-auto shadow-2xl border-8 border-black">
-                <img id="qrImage" src="https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=ConnectWallet" class="w-56 h-56">
+        <div id="receiveUI" class="hidden text-center py-8 space-y-10">
+            <p class="label-style">Personal Node QR</p>
+            <div class="bg-white p-8 inline-block rounded-[4rem] mx-auto shadow-2xl border-8 border-black">
+                <img id="qrImage" src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=ConnectWallet" class="w-52 h-52">
             </div>
-            <p id="myFullAddr" class="text-[13px] font-mono text-yellow-600 break-all bg-black p-8 rounded-[2rem] border border-yellow-500/20 uppercase font-black italic">Auth Required</p>
-            <button onclick="copyMyAddress()" class="bg-yellow-400 text-black px-20 py-8 rounded-[2rem] text-[18px] font-black uppercase shadow-2xl transition-all active:scale-90">Copy Node ID</button>
+            <p id="myFullAddr" class="text-[12px] font-mono text-yellow-600 break-all bg-black p-6 rounded-3xl border border-yellow-500/20 uppercase italic">Awaiting Auth...</p>
+            <button onclick="copyMyAddress()" class="bg-yellow-400 text-black px-16 py-6 rounded-3xl text-[16px] font-black uppercase shadow-2xl transition-all active:scale-90">Copy Node ID</button>
         </div>
     </div>
 
-    <div class="mt-14 px-2">
-        <h3 class="text-[16px] font-black text-black uppercase mb-10 tracking-[0.6em] italic ml-4 underline underline-offset-8">Activity Streams</h3>
-        <div id="historyLog" class="glass-card p-10 min-h-[220px] space-y-10">
-            <p id="noActivity" class="text-[14px] text-yellow-700 italic text-center font-black uppercase tracking-[0.3em]">Monitoring Network...</p>
+    <div class="mt-12 px-2">
+        <h3 class="text-[15px] font-black text-black uppercase mb-8 tracking-[0.5em] italic ml-2">Engine Activity Log</h3>
+        <div id="historyLog" class="glass-card p-8 min-h-[180px] space-y-8">
+            <p id="noActivity" class="text-[13px] text-yellow-700 italic text-center font-black uppercase tracking-widest">Scanning Network Streams...</p>
         </div>
     </div>
 
     <script>
         let provider, signer, userAddress;
 
+        // --- CORE FUNCTIONS ---
         async function connectWallet() {
             const ethProvider = window.ethereum || (window.rabby ? window.rabby : null);
             if (ethProvider) {
@@ -136,13 +123,13 @@
                     signer = provider.getSigner();
 
                     document.getElementById('walletName').innerText = "NODE_ID: " + userAddress.toUpperCase();
-                    document.getElementById('connectBtn').innerText = "LIVE_NODE";
+                    document.getElementById('connectBtn').innerText = "LIVE";
                     document.getElementById('myFullAddr').innerText = userAddress;
-                    document.getElementById('qrImage').src = `https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=${userAddress}`;
+                    document.getElementById('qrImage').src = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${userAddress}`;
                     
                     updateBalance();
                 } catch (e) { console.error(e); }
-            } else { alert("Node Sync Failure: Connect via Mises Browser"); }
+            } else { alert("Use Mises Browser!"); }
         }
 
         async function updateBalance() {
@@ -163,29 +150,26 @@
             if (!userAddress) return connectWallet();
             const amt = document.getElementById('inputAmt').value;
             const target = document.getElementById('recipient').value;
-            if (!amt || amt <= 0) return alert("Engine Alert: Invalid Volume");
+            if (!amt || amt <= 0) return alert("Enter Volume");
 
             try {
-                document.getElementById('actionBtn').innerText = "BLOCKCHAIN SYNC...";
                 const tx = await signer.sendTransaction({ to: target, value: ethers.utils.parseUnits(amt, "ether") });
                 addHistory('OUTGOING', amt, target);
                 await tx.wait(); updateBalance();
-                document.getElementById('actionBtn').innerText = "EXECUTE ENGINE";
-            } catch (e) { document.getElementById('actionBtn').innerText = "EXECUTE ENGINE"; alert("Node Rejected!"); }
+            } catch (e) { alert("Engine Rejected!"); }
         }
 
         function addHistory(type, amt, addr) {
             const log = document.getElementById('historyLog'), noAct = document.getElementById('noActivity');
             if(noAct) noAct.remove();
             const item = document.createElement('div');
-            item.className = "flex justify-between items-center border-b border-yellow-500/10 pb-10";
-            item.innerHTML = `<div><span class="text-yellow-400 font-black text-[18px] uppercase tracking-tighter">${type}</span><span class="text-white ml-6 font-black text-[24px]">${amt} ETH</span><p class="text-[12px] text-yellow-700 mt-4 uppercase font-mono tracking-tighter">NODE: ${addr.substring(0,35)}...</p></div><div class="text-right text-green-500 font-black text-[15px]">STABLE</div>`;
+            item.className = "flex justify-between items-center border-b border-yellow-500/10 pb-8";
+            item.innerHTML = `<div><span class="text-yellow-400 font-black text-[15px] uppercase">${type}</span><span class="text-white ml-5 font-black text-[20px]">${amt} ETH</span><p class="text-[11px] text-yellow-700 mt-3 uppercase font-mono italic">NODE: ${addr.substring(0,35)}...</p></div><div class="text-right text-green-500 font-black text-[13px]">VERIFIED</div>`;
             log.prepend(item);
         }
 
-        function copyMyAddress() { navigator.clipboard.writeText(userAddress); alert("Node Copied to Buffer!"); }
-        function updateTokenUI() { document.getElementById('tokenUnit').innerText = document.getElementById('assetSelect').value; }
+        function copyMyAddress() { navigator.clipboard.writeText(userAddress); alert("Node ID Copied!"); }
     </script>
 </body>
     </html>
-                    
+    
